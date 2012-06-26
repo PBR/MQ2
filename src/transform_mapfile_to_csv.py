@@ -24,7 +24,11 @@
 """
 
 
+import logging
 import os
+from pymq2 import read_input_file
+
+log = logging.getLogger('pymq2')
 
 
 def transform_loc_map(inputfile):
