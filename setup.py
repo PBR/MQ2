@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#-*- coding: UTF-8 -*-
+
 """
 Setup script
 """
@@ -12,7 +14,7 @@ setup(
     author='Pierre-Yves Chibon',
     author_email='pingou@pingoured.fr',
     version=__version__,
-    license='BSD',
+    license='GPLv3+',
     url='https://github.com/PBR/pymq2/',
     package_dir={'pymq2': 'src'},
     packages=['pymq2'],
