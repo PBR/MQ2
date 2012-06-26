@@ -24,31 +24,15 @@
 """
 
 import datetime
+import logging
 import os
 import shutil
 import tarfile
 import tempfile
 import zipfile
+from pymq2 import read_input_file
 
-
-def read_input_file(filename, sep='\t'):
-    """Reads a given inputfile (tab delimited) and returns a matrix
-    (list of list).
-    arg: filename, the complete path to the inputfile to read
-    """
-    output = []
-    stream = None
-    try:
-        stream = open(filename, 'r')
-        for row in stream:
-            output.append(row.strip().split(sep))
-    except Exception, err:
-        print "Something wrong happend while reading the file %s " % filename
-        print "ERROR: %s" % err
-    finally:
-        if stream:
-            stream.close()
-    return output
+log = logging.getLogger('pymq2')
 
 
 def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
