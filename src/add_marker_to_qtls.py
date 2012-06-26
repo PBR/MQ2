@@ -44,19 +44,19 @@ def write_down_qtl_found(outputfile, qtls):
     try:
         stream = open(outputfile, 'w')
     except Exception, err:
-        print 'Could not open the file %s to write in' % outputfile
-        print 'ERROR: %s' % err
+        log.info('Could not open the file %s to write in' % outputfile)
+        log.debug('ERROR: %s' % err)
 
     try:
         for qtl in qtls:
             stream.write('\t'.join(qtl) + '\n')
     except Exception, err:
-        print 'An error occured while writing the QTLs to the file %s' \
-        % outputfile
-        print 'ERROR: %s' % err
+        log.info('An error occured while writing the QTLs to the file %s' \
+        % outputfile)
+        log.debug('ERROR: %s' % err)
     finally:
         stream.close()
-    print 'Wrote QTLs in file %s' % outputfile
+    log.info('Wrote QTLs in file %s' % outputfile)
 
 
 def add_marker_to_qtl(qtl, map_list):
@@ -95,7 +95,7 @@ def add_marker_to_qtls(folder, qtlfile, mapfile, outputfile='map.csv'):
     for qtl in qtl_list[1:]:
         qtl.append(add_marker_to_qtl(qtl, map_list))
         qtls.append(qtl)
-    print '- %s QTLs processed in %s' % (len(qtls), qtlfile)
+    log.info('- %s QTLs processed in %s' % (len(qtls), qtlfile))
     write_down_qtl_found(os.path.join(folder, outputfile), qtls)
 
 

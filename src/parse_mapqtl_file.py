@@ -106,12 +106,12 @@ def write_down_qtl_found(outputfile, qtls):
         for qtl in qtls:
             stream.write('\t'.join(qtl) + '\n')
     except Exception, err:
-        print 'An error occured while writing the QTLs to the file %s' \
-        % outputfile
-        print 'ERROR: %s' % err
+        log.info('An error occured while writing the QTLs to the file %s' \
+        % outputfile)
+        log.debug("Error: %s" % err)
     finally:
         stream.close()
-    print 'Wrote QTLs in file %s' % outputfile
+    log.info('Wrote QTLs in file %s' % outputfile)
 
 
 def set_tmp_folder():
@@ -133,12 +133,13 @@ def extract_zip(filename):
     which will be extracted
     """
     extract_dir = tempfile.gettempdir()
-    print "Extracting %s in %s " % (filename, extract_dir)
+    log.info("Extracting %s in %s " % (filename, extract_dir))
     if not os.path.exists(extract_dir):
         try:
             os.mkdir(extract_dir)
         except IOError, err:
-            print "Could not generate the folder %s" % extract_dir
+            log.info("Could not generate the folder %s" % extract_dir)
+            log.debug("Error: %s" % err)
 
     if zipfile.is_zipfile(filename):
         try:
@@ -146,14 +147,14 @@ def extract_zip(filename):
             zfile.extractall(extract_dir)
             zfile.close()
         except Exception, err:
-            print "Error: %s" % err
+            log.debug("Error: %s" % err)
     else:
         try:
             tar = tarfile.open(filename)
             tar.extractall(extract_dir)
             tar.close()
         except tarfile.ReadError, err:
-            print "Error: %s" % err
+            log.debug("Error: %s" % err)
 
     return extract_dir
 
@@ -193,7 +194,7 @@ def parse_mapqtl_file(folder, sessionid, zipfile = None, lodthreshold=3,
     for filename in filelist:
         matrix = read_input_file(filename)
         qtls.extend(get_qtls_from_mapqtl_data(matrix, lodthreshold, filename))
-    print '- %s QTLs found in %s' % (len(qtls), filename)
+    log.info('- %s QTLs found in %s' % (len(qtls), filename))
     write_down_qtl_found(os.path.join(folder, outputfile), qtls)
     shutil.rmtree(tempfile.gettempdir())
 

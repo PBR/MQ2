@@ -38,19 +38,19 @@ def write_down_map(outputfile, genetic_map):
     try:
         stream = open(outputfile, 'w')
     except Exception, err:
-        print 'Could not open the file %s to write in' % outputfile
-        print 'ERROR: %s' % err
+        log.info('Could not open the file %s to write in' % outputfile)
+        log.debug("Error: %s" % err)
 
     try:
         for entry in genetic_map:
             stream.write(','.join(entry) + "\n")
     except Exception, err:
-        print 'An error occured while writing the map to the file %s' \
-        % outputfile
-        print 'ERROR: %s' % err
+        log.info('An error occured while writing the map to the file %s' \
+        % outputfile)
+        log.debug("Error: %s" % err)
     finally:
         stream.close()
-    print 'Wrote genetic map in file %s' % outputfile
+    log.info('Wrote genetic map in file %s' % outputfile)
 
 
 def add_qtl_to_marker(marker, qtls):
@@ -86,8 +86,8 @@ def add_qtl_to_map(folder, qtlfile, mapfile, outputfile='map-with-qtl.csv'):
     for marker in map_list[1:]:
         markers.append(add_qtl_to_marker(marker, qtl_list))
         qtl_cnt = qtl_cnt + int(markers[-1][-1])
-    print '- %s markers processed in %s' % (len(markers), mapfile)
-    print '- %s QTLs located in the map: %s' % (qtl_cnt, outputfile)
+    log.info('- %s markers processed in %s' % (len(markers), mapfile))
+    log.info('- %s QTLs located in the map: %s' % (qtl_cnt, outputfile))
     write_down_map(os.path.join(folder, outputfile), markers)
 
 
