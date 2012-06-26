@@ -1,8 +1,7 @@
-#!/usr/bin/python
 #-*- coding: UTF-8 -*-
 
 """
- (c) Copyright Pierre-Yves Chibon -- 2011
+ (c) Copyright Pierre-Yves Chibon -- 2011, 2012
 
  Distributed under License GPLv3 or later
  You can find a copy of this license on the website
@@ -175,7 +174,7 @@ def extract_zip(filename):
     return extract_dir
 
 
-def main(folder, sessionid, zipfile = None, lodthreshold=3,
+def parse_mapqtl_file(folder, sessionid, zipfile = None, lodthreshold=3,
         outputfile='qtls.csv'):
     """Main function.
     This function finds all the file fitting the pattern in the given

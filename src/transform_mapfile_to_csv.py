@@ -1,8 +1,7 @@
-#!/usr/bin/python
 #-*- coding: UTF-8 -*-
 
 """
- (c) Copyright Pierre-Yves Chibon -- 2011
+ (c) Copyright Pierre-Yves Chibon -- 2011, 2012
 
  Distributed under License GPLv3 or later
  You can find a copy of this license on the website

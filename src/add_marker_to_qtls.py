@@ -1,8 +1,7 @@
-#!/usr/bin/python
 #-*- coding: UTF-8 -*-
 
 """
- (c) Copyright Pierre-Yves Chibon -- 2011
+ (c) Copyright Pierre-Yves Chibon -- 2011, 2012
 
  Distributed under License GPLv3 or later
  You can find a copy of this license on the website
@@ -94,7 +93,7 @@ def add_marker_to_qtl(qtl, map_list):
     return closest
 
 
-def main(folder, qtlfile, mapfile, outputfile='map.csv'):
+def add_marker_to_qtls(folder, qtlfile, mapfile, outputfile='map.csv'):
     """Main function.
     This function transform the map file into a csv file.
 
