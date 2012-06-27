@@ -23,3 +23,133 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  MA 02110-1301, USA.
 """
+
+
+import argparse
+import logging
+import os
+import shutil
+import sys
+import tempfile
+
+try:
+    from pymq2 import set_tmp_folder, extract_zip, MQ2Exception
+    from pymq2.transform_mapfile_to_csv import transform_mapfile_to_csv
+    from pymq2.parse_mapqtl_file import parse_mapqtl_file
+    from pymq2.add_marker_to_qtls import add_marker_to_qtls
+    from pymq2.add_qtl_to_map import add_qtl_to_map
+except:
+    from src import set_tmp_folder, extract_zip, MQ2Exception
+    from src.transform_mapfile_to_csv import transform_mapfile_to_csv
+    from src.parse_mapqtl_file import parse_mapqtl_file
+    from src.add_marker_to_qtls import add_marker_to_qtls
+    from src.add_qtl_to_map import add_qtl_to_map
+
+# Initial simple logging stuff
+logging.basicConfig()
+LOG = logging.getLogger('pymq2')
+if '--debug' in sys.argv:
+    LOG.setLevel(logging.DEBUG)
+elif '--verbose' in sys.argv:
+    LOG.setLevel(logging.INFO)
+
+
+def get_arguments():
+    """ Handle the command line arguments given to this program """
+    LOG.debug('Parse command line argument')
+    parser = argparse.ArgumentParser(description='Command line interface \
+        for the MQ² program')
+    parser.add_argument('-z', '--zipfile', default=None,
+        help='Zip file containing the MapQTL output files.')
+    parser.add_argument('-f', '--folder', default=None,
+        help='Path to a local folder containing the MapQTL output files.')
+    parser.add_argument('-m', '--map', default=None,
+        help='Path to a local .map file used in the provided MapQTL \
+        analysis.')
+    parser.add_argument('-c', '--csvmap', default=None,
+        help='Path to a local csv map file used in the provided MapQTL \
+        analysis.')
+    parser.add_argument('--lod', default=3,
+        help='LOD threshold to use to assess the significance of a LOD \
+        value for a QTL.')
+    parser.add_argument('--session', default=None,
+        help='MapQTL session to analyze.')
+    parser.add_argument('--verbose', action='store_true',
+                help="Gives more info about what's going on")
+    parser.add_argument('--debug', action='store_true',
+                help="Outputs debugging information")
+    return parser.parse_args()
+
+
+def main():
+    """ Main function.
+    Retrieves the arguments provided by the user.
+    Extract the Zip file if needed.
+    Convert the .map file to CSV.
+    Parse the output files from MapQTL
+        Generate the qtl_matrix.csv
+        Generate the qtls.csv file
+    Retrieve the marker closest to the QTL peak
+        Generate the qtl_with_mk.csv file
+    Calculate for each markers the number of QTLs associated
+        Generate the map_with_qtl.csv file
+    """
+    args = get_arguments()
+    if args.zipfile and args.folder:
+        print 'You cannot specify and a zip file and a folder for the '\
+            'MapQTL output.'
+        return 1
+    if not args.zipfile and not args.folder:
+        print 'You must provide either a zip file or a folder '\
+            'containing the MapQTL output.'
+        return 1
+    if args.map and args.csvmap:
+        print 'You cannot specify and a .map file and a csv file for '\
+            'the map.'
+        return 1
+    if not args.map and not args.csvmap:
+        print 'You must provide either a .map file or a csv file of' \
+            'the map used in the MapQTL analysis.'
+        return 1
+    if not args.session:
+        print 'You must provide the MapQTL session to analyse.'
+        return 1
+
+    tmp_folder = None
+    try:
+        if args.zipfile:
+            tmp_folder = set_tmp_folder()
+            extract_zip(args.zipfile)
+            mapqtl_folder = tempfile.gettempdir()
+        else:
+            mapqtl_folder = args.folder
+
+        map_file = args.csvmap
+        if args.map:
+            transform_mapfile_to_csv(inputfile=args.map,
+                outputfile='map.csv')
+            map_file = 'map.csv'
+
+        
+        parse_mapqtl_file(inputfolder=mapqtl_folder,
+            sessionid=args.session,
+            lodthreshold=args.lod,
+            outputfile='qtls.csv')
+
+        add_marker_to_qtls(qtlfile='qtls.csv',
+            mapfile=map_file,
+            outputfile='qtl_with_mk.csv')
+
+        add_qtl_to_map(qtlfile='qtl_with_mk.csv',
+            mapfile=map_file,
+            outputfile='map_with_qtl.csv')
+    except MQ2Exception, err:
+        print 'ERROR: %s' % err
+        return 2
+    finally:
+        if os.path.exists(tmp_folder):
+            shutil.rmtree(tmp_folder)
+
+
+if __name__ == "__main__":
+    main()
