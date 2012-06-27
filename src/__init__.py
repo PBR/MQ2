@@ -45,16 +45,16 @@ def set_tmp_folder():
     for char in [' ', ':', '.', '-']:
         output = output.replace(char, '')
     output.strip()
-    tempfile.tempdir = '%s/%s' % (tempfile.gettempdir(), output)
-    return tempfile.gettempdir()
+    tmp_folder = os.path.join(tempfile.gettempdir(), output)
+    return tmp_folder
 
 
-def extract_zip(filename):
+def extract_zip(filename, extract_dir):
     """ Extract the sources in a temporary folder.
     :arg filename, name of the zip file containing the data from MapQTL
     which will be extracted
+    :arg extract_dir, folder in which to extract the archive.
     """
-    extract_dir = tempfile.gettempdir()
     LOG.info("Extracting %s in %s " % (filename, extract_dir))
     if not os.path.exists(extract_dir):
         try:
@@ -110,5 +110,12 @@ class MQ2Exception(Exception):
 class MQ2NoMatrixException(MQ2Exception):
     """ Exception raised when the qtl_matrix file can not be generated
     because the maps used in the mqo files are inconsistent.
+    """
+    pass
+
+
+class MQ2NoSuchSessionException(MQ2Exception):
+    """ Exception raised when there are no MapQTL files corresponding to
+    the session identifier provided by the user.
     """
     pass
