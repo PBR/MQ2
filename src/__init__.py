@@ -104,4 +104,10 @@ def read_input_file(filename, sep='\t'):
 class MQ2Exception(Exception):
     """ Basic exception class to be used by the pymq2 library. """
     pass
-    
+
+
+class MQ2NoMatrixException(MQ2Exception):
+    """ Exception raised when the qtl_matrix file can not be generated
+    because the maps used in the mqo files are inconsistent.
+    """
+    pass
