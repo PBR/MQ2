@@ -147,7 +147,7 @@ def main():
         print 'ERROR: %s' % err
         return 2
     finally:
-        if os.path.exists(tmp_folder):
+        if tmp_folder and os.path.exists(tmp_folder):
             shutil.rmtree(tmp_folder)
 
 
