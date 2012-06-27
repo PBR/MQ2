@@ -35,14 +35,14 @@ import tempfile
 try:
     from pymq2 import (set_tmp_folder, extract_zip, MQ2Exception,
         MQ2NoMatrixException)
-    from pymq2.transform_mapfile_to_csv import transform_mapfile_to_csv
+    from pymq2.generate_map_from_mapqtl import generate_map_from_mapqtl
     from pymq2.parse_mapqtl_file import parse_mapqtl_file
     from pymq2.add_marker_to_qtls import add_marker_to_qtls
     from pymq2.add_qtl_to_map import add_qtl_to_map
 except:
     from src import (set_tmp_folder, extract_zip, MQ2Exception,
         MQ2NoMatrixException)
-    from src.transform_mapfile_to_csv import transform_mapfile_to_csv
+    from src.generate_map_from_mapqtl import generate_map_from_mapqtl
     from src.parse_mapqtl_file import parse_mapqtl_file
     from src.add_marker_to_qtls import add_marker_to_qtls
     from src.add_qtl_to_map import add_qtl_to_map
@@ -65,12 +65,6 @@ def get_arguments():
         help='Zip file containing the MapQTL output files.')
     parser.add_argument('-f', '--folder', default=None,
         help='Path to a local folder containing the MapQTL output files.')
-    parser.add_argument('-m', '--map', default=None,
-        help='Path to a local .map file used in the provided MapQTL \
-        analysis.')
-    parser.add_argument('-c', '--csvmap', default=None,
-        help='Path to a local csv map file used in the provided MapQTL \
-        analysis.')
     parser.add_argument('--lod', default=3,
         help='LOD threshold to use to assess the significance of a LOD \
         value for a QTL.')
@@ -105,14 +99,6 @@ def main():
         print 'You must provide either a zip file or a folder '\
             'containing the MapQTL output.'
         return 1
-    if args.map and args.csvmap:
-        print 'You cannot specify and a .map file and a csv file for '\
-            'the map.'
-        return 1
-    if not args.map and not args.csvmap:
-        print 'You must provide either a .map file or a csv file of' \
-            'the map used in the MapQTL analysis.'
-        return 1
     if not args.session:
         print 'You must provide the MapQTL session to analyse.'
         return 1
@@ -125,11 +111,8 @@ def main():
         else:
             mapqtl_folder = args.folder
 
-        map_file = args.csvmap
-        if args.map:
-            transform_mapfile_to_csv(inputfile=args.map,
-                outputfile='map.csv')
-            map_file = 'map.csv'
+        generate_map_from_mapqtl(inputfolder=mapqtl_folder,
+                sessionid=args.session)
 
         try:
             parse_mapqtl_file(inputfolder=mapqtl_folder,
@@ -140,11 +123,11 @@ def main():
             LOG.warn(err)
 
         add_marker_to_qtls(qtlfile='qtls.csv',
-            mapfile=map_file,
+            mapfile='map.csv',
             outputfile='qtls_with_mk.csv')
 
         add_qtl_to_map(qtlfile='qtls_with_mk.csv',
-            mapfile=map_file,
+            mapfile='map.csv',
             outputfile='map_with_qtl.csv')
     except MQ2Exception, err:
         print 'ERROR: %s' % err
