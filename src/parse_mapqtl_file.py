@@ -26,9 +26,11 @@
 import logging
 import os
 try:
-    from pymq2 import read_input_file, MQ2Exception, MQ2NoMatrixException
+    from pymq2 import (read_input_file, MQ2Exception,
+        MQ2NoMatrixException, MQ2NoSuchSessionException)
 except ImportError:
-    from src import read_input_file, MQ2Exception, MQ2NoMatrixException
+    from src import (read_input_file, MQ2Exception,
+        MQ2NoMatrixException, MQ2NoSuchSessionException)
 
 LOG = logging.getLogger('pymq2')
 
@@ -164,7 +166,8 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
 
     filelist = get_files_to_read(inputfolder, sessionid)
     if not filelist:
-        raise MQ2Exception('No file corresponds to the session "%s"\
+        raise MQ2NoSuchSessionException(
+        'No file corresponds to the session "%s"\
         ' % sessionid)
     qtls = []
     qtl_matrix = []
