@@ -26,9 +26,9 @@
 
 import logging
 try:
-    from pymq2 import read_input_file
+    from pymq2 import read_input_file, MQ2NoSuchSessionException
 except ImportError:
-    from src import read_input_file
+    from src import read_input_file, MQ2NoSuchSessionException
 
 LOG = logging.getLogger('pymq2')
 
