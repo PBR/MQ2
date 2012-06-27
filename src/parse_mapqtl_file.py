@@ -177,6 +177,7 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
     qtls.append(headers)
     write_matrix = True
     msg = None
+    filelist.sort()
     for filename in filelist:
         matrix = read_input_file(filename)
         try:
