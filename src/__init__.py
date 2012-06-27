@@ -33,6 +33,7 @@ import zipfile
 
 log = logging.getLogger('pymq2')
 
+__version__ = 0.1.0
 
 
 def set_tmp_folder():
