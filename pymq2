@@ -33,13 +33,15 @@ import sys
 import tempfile
 
 try:
-    from pymq2 import set_tmp_folder, extract_zip, MQ2Exception
+    from pymq2 import (set_tmp_folder, extract_zip, MQ2Exception,
+        MQ2NoMatrixException)
     from pymq2.transform_mapfile_to_csv import transform_mapfile_to_csv
     from pymq2.parse_mapqtl_file import parse_mapqtl_file
     from pymq2.add_marker_to_qtls import add_marker_to_qtls
     from pymq2.add_qtl_to_map import add_qtl_to_map
 except:
-    from src import set_tmp_folder, extract_zip, MQ2Exception
+    from src import (set_tmp_folder, extract_zip, MQ2Exception,
+        MQ2NoMatrixException)
     from src.transform_mapfile_to_csv import transform_mapfile_to_csv
     from src.parse_mapqtl_file import parse_mapqtl_file
     from src.add_marker_to_qtls import add_marker_to_qtls
@@ -130,11 +132,13 @@ def main():
                 outputfile='map.csv')
             map_file = 'map.csv'
 
-        
-        parse_mapqtl_file(inputfolder=mapqtl_folder,
-            sessionid=args.session,
-            lodthreshold=args.lod,
-            outputfile='qtls.csv')
+        try:
+            parse_mapqtl_file(inputfolder=mapqtl_folder,
+                sessionid=args.session,
+                lodthreshold=args.lod,
+                qtl_outputfile='qtls.csv')
+        except MQ2NoMatrixException, err:
+            LOG.warn(err)
 
         add_marker_to_qtls(qtlfile='qtls.csv',
             mapfile=map_file,

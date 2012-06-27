@@ -29,9 +29,9 @@ import os
 import shutil
 
 try:
-    from pymq2 import read_input_file, MQ2Exception
+    from pymq2 import read_input_file, MQ2Exception, MQ2NoMatrixException
 except ImportError:
-    from src import read_input_file, MQ2Exception
+    from src import read_input_file, MQ2Exception, MQ2NoMatrixException
 
 log = logging.getLogger('pymq2')
 
@@ -72,6 +72,32 @@ def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
 
     return qtls
 
+def get_qtls_matrix(qtl_matrix, matrix, inputfile):
+    """Extract for each position the LOD value obtained and save it in a
+    matrix.
+    This assumes that the first 4 columns are identical accross all mqo
+    files (ie: the Group, Position and Locus are the same). This
+    assumption should hold true if the files were generated from the
+    same map.
+    :arg qtl_matrix, the matrix in which to save the output.
+    :arg matrix, the MapQTL file read in memory.
+    :arg inputfile, name of the inputfile in which the QTLs have been
+    found.
+    """
+    trait_name = inputfile.split(')_', 1)[1].split('.mqo')[0]
+    matrix = zip(*matrix)
+    if not qtl_matrix:
+        qtl_matrix = matrix[:4]
+    else:
+        if matrix[:4] != qtl_matrix[:4]:
+            raise MQ2NoMatrixException(
+            'The map used in the file "%s" does not' \
+            ' correspond to the map used in at least one other file.'\
+            % inputfile)
+    tmp = list(matrix[4])
+    tmp[0] = trait_name
+    qtl_matrix.append(tmp)
+    return qtl_matrix
 
 def get_files_to_read(folder, sessionid):
     """ Reads a given folder and return all the files from MapQTL which
@@ -105,7 +131,7 @@ def write_down_qtl_found(outputfile, qtls):
     try:
         stream = open(outputfile, 'w')
         for qtl in qtls:
-            stream.write('\t'.join(qtl) + '\n')
+            stream.write(','.join(qtl) + '\n')
     except Exception, err:
         log.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
@@ -116,7 +142,8 @@ def write_down_qtl_found(outputfile, qtls):
 
 
 def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
-        outputfolder='.', outputfile='qtls.csv'):
+        qtl_outputfile='qtls.csv',
+        qtl_matrixfile='qtls_matrix.csv'):
     """Main function.
     This function finds all the file fitting the pattern in the given
     folder, then these files are read and for each a list of QTLs is
@@ -128,10 +155,13 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
     is used to identy which files should be read.
     :kwarg lodthreshold, the LOD threshold from which we decide if we
     have a QTL.
-    :kwarg outputfolder, the name of the folder in whici to write down
-    the output files.
-    :kwarg outputfile, the name of the file in which the QTLs found in
-    the data will be printed.
+    :kwarg qtl_outputfile, the name of the file in which the list of
+    QTLs found in the data will be printed. The string should provide
+    the full path to the where file should be written.
+    :kwarg qtl_matrixfile, the name of the file in a matrix of markers
+    per traits will be printed, given for each marker/trait combination
+    the LOD value found. The string should provide the full path to the
+    where file should be written.
     """
 
     filelist = get_files_to_read(inputfolder, sessionid)
@@ -139,12 +169,25 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
         raise MQ2Exception('No file corresponds to the session "%s"\
         ' % sessionid)
     qtls = []
+    qtl_matrix = []
     matrix = read_input_file(filelist[0])
     headers = matrix[0]
     headers.insert(0, 'Trait_name')
     qtls.append(headers)
+    write_matrix = True
+    msg = None
     for filename in filelist:
         matrix = read_input_file(filename)
+        try:
+            qtl_matrix = get_qtls_matrix(qtl_matrix, matrix, filename)
+        except MQ2NoMatrixException, err:
+            msg = err
+            write_matrix = False
         qtls.extend(get_qtls_from_mapqtl_data(matrix, lodthreshold, filename))
     log.info('- %s QTLs found in %s' % (len(qtls), filename))
-    write_down_qtl_found(os.path.join(outputfolder, outputfile), qtls)
+    write_down_qtl_found(qtl_outputfile, qtls)
+    if write_matrix:
+        qtl_matrix = zip(*qtl_matrix)
+        write_down_qtl_found(qtl_matrixfile, qtl_matrix)
+    else:
+        raise MQ2NoMatrixException(msg)
