@@ -23,17 +23,14 @@
  MA 02110-1301, USA.
 """
 
-import datetime
 import logging
 import os
-import shutil
-
 try:
     from pymq2 import read_input_file, MQ2Exception, MQ2NoMatrixException
 except ImportError:
     from src import read_input_file, MQ2Exception, MQ2NoMatrixException
 
-log = logging.getLogger('pymq2')
+LOG = logging.getLogger('pymq2')
 
 
 def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
@@ -47,7 +44,6 @@ def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
     """
     trait_name = inputfile.split(')_', 1)[1].split('.mqo')[0]
     qtls = []
-    
     qtl = None
     for entry in matrix[1:]:
         if qtl is None:
@@ -71,6 +67,7 @@ def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
             qtls.append(qtl)
 
     return qtls
+
 
 def get_qtls_matrix(qtl_matrix, matrix, inputfile):
     """Extract for each position the LOD value obtained and save it in a
@@ -98,6 +95,7 @@ def get_qtls_matrix(qtl_matrix, matrix, inputfile):
     tmp[0] = trait_name
     qtl_matrix.append(tmp)
     return qtl_matrix
+
 
 def get_files_to_read(folder, sessionid):
     """ Reads a given folder and return all the files from MapQTL which
@@ -132,13 +130,13 @@ def write_down_qtl_found(outputfile, qtls):
         stream = open(outputfile, 'w')
         for qtl in qtls:
             stream.write(','.join(qtl) + '\n')
-    except Exception, err:
-        log.info('An error occured while writing the QTLs to the file %s' \
+    except IOError, err:
+        LOG.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
-        log.debug("Error: %s" % err)
+        LOG.debug("Error: %s" % err)
     finally:
         stream.close()
-    log.info('Wrote QTLs in file %s' % outputfile)
+    LOG.info('Wrote QTLs in file %s' % outputfile)
 
 
 def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
@@ -184,7 +182,7 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
             msg = err
             write_matrix = False
         qtls.extend(get_qtls_from_mapqtl_data(matrix, lodthreshold, filename))
-    log.info('- %s QTLs found in %s' % (len(qtls), filename))
+    LOG.info('- %s QTLs found in %s' % (len(qtls), filename))
     write_down_qtl_found(qtl_outputfile, qtls)
     if write_matrix:
         qtl_matrix = zip(*qtl_matrix)

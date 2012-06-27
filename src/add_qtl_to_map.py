@@ -24,13 +24,12 @@
 """
 
 import logging
-import os
 try:
     from pymq2 import read_input_file
 except ImportError:
     from src import read_input_file
 
-log = logging.getLogger('pymq2')
+LOG = logging.getLogger('pymq2')
 
 
 def write_down_map(outputfile, genetic_map):
@@ -40,20 +39,20 @@ def write_down_map(outputfile, genetic_map):
     """
     try:
         stream = open(outputfile, 'w')
-    except Exception, err:
-        log.info('Could not open the file %s to write in' % outputfile)
-        log.debug("Error: %s" % err)
+    except IOError, err:
+        LOG.info('Could not open the file %s to write in' % outputfile)
+        LOG.debug("Error: %s" % err)
 
     try:
         for entry in genetic_map:
             stream.write(','.join(entry) + "\n")
-    except Exception, err:
-        log.info('An error occured while writing the map to the file %s' \
+    except IOError, err:
+        LOG.info('An error occured while writing the map to the file %s' \
         % outputfile)
-        log.debug("Error: %s" % err)
+        LOG.debug("Error: %s" % err)
     finally:
         stream.close()
-    log.info('Wrote genetic map in file %s' % outputfile)
+    LOG.info('Wrote genetic map in file %s' % outputfile)
 
 
 def add_qtl_to_marker(marker, qtls):
@@ -89,6 +88,6 @@ def add_qtl_to_map(qtlfile, mapfile, outputfile='map_with_qtl.csv'):
     for marker in map_list[1:]:
         markers.append(add_qtl_to_marker(marker, qtl_list[1:]))
         qtl_cnt = qtl_cnt + int(markers[-1][-1])
-    log.info('- %s markers processed in %s' % (len(markers), mapfile))
-    log.info('- %s QTLs located in the map: %s' % (qtl_cnt, outputfile))
+    LOG.info('- %s markers processed in %s' % (len(markers), mapfile))
+    LOG.info('- %s QTLs located in the map: %s' % (qtl_cnt, outputfile))
     write_down_map(outputfile, markers)

@@ -25,13 +25,12 @@
 
 
 import logging
-import os
 try:
     from pymq2 import read_input_file
 except ImportError:
     from src import read_input_file
 
-log = logging.getLogger('pymq2')
+LOG = logging.getLogger('pymq2')
 
 
 def write_down_qtl_found(outputfile, qtls):
@@ -46,20 +45,20 @@ def write_down_qtl_found(outputfile, qtls):
 
     try:
         stream = open(outputfile, 'w')
-    except Exception, err:
-        log.info('Could not open the file %s to write in' % outputfile)
-        log.debug('ERROR: %s' % err)
+    except IOError, err:
+        LOG.info('Could not open the file %s to write in' % outputfile)
+        LOG.debug('ERROR: %s' % err)
 
     try:
         for qtl in qtls:
             stream.write(','.join(qtl) + '\n')
-    except Exception, err:
-        log.info('An error occured while writing the QTLs to the file %s' \
+    except IOError, err:
+        LOG.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
-        log.debug('ERROR: %s' % err)
+        LOG.debug('ERROR: %s' % err)
     finally:
         stream.close()
-    log.info('Wrote QTLs in file %s' % outputfile)
+    LOG.info('Wrote QTLs in file %s' % outputfile)
 
 
 def add_marker_to_qtl(qtl, map_list):
@@ -100,5 +99,5 @@ def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtls_with_mk.csv'):
     for qtl in qtl_list[1:]:
         qtl.append(add_marker_to_qtl(qtl, map_list))
         qtls.append(qtl)
-    log.info('- %s QTLs processed in %s' % (len(qtls), qtlfile))
+    LOG.info('- %s QTLs processed in %s' % (len(qtls), qtlfile))
     write_down_qtl_found(outputfile, qtls)

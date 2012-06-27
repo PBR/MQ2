@@ -25,13 +25,8 @@
 
 
 import logging
-import os
-try:
-    from pymq2 import read_input_file
-except ImportError:
-    from src import read_input_file
 
-log = logging.getLogger('pymq2')
+LOG = logging.getLogger('pymq2')
 
 
 def transform_loc_map(inputfile):
@@ -54,10 +49,10 @@ def transform_loc_map(inputfile):
                 else:
                     content.insert(1, group)
                     genetic_map.append(content)
-    except Exception, err:
-        log.info("Something wrong happend while reading the file %s "\
+    except IOError, err:
+        LOG.info("Something wrong happend while reading the file %s "\
             % inputfile)
-        log.debug("Error: %s" % err)
+        LOG.debug("Error: %s" % err)
     finally:
         if stream:
             stream.close()
@@ -71,21 +66,21 @@ def write_down_map(outputfile, genetic_map):
     """
     try:
         stream = open(outputfile, 'w')
-    except Exception, err:
-        log.info('Could not open the file %s to write in' % outputfile)
-        log.debug("Error: %s" % err)
+    except IOError, err:
+        LOG.info('Could not open the file %s to write in' % outputfile)
+        LOG.debug("Error: %s" % err)
 
     try:
         stream.write("Marker, Linkage group, Position\n")
         for entry in genetic_map:
             stream.write(','.join(entry) + "\n")
-    except Exception, err:
-        log.info('An error occured while writing the map to the file %s' \
+    except IOError, err:
+        LOG.info('An error occured while writing the map to the file %s' \
             % outputfile)
-        log.debug("Error: %s" % err)
+        LOG.debug("Error: %s" % err)
     finally:
         stream.close()
-    log.info('Wrote genetic map in file %s' % outputfile)
+    LOG.info('Wrote genetic map in file %s' % outputfile)
 
 
 def transform_mapfile_to_csv(inputfile, outputfile='map.csv'):
@@ -96,9 +91,8 @@ def transform_mapfile_to_csv(inputfile, outputfile='map.csv'):
     :kwarg outputfile, the name of the output file in which the map will
     be written.
     """
-    log.debug('Transform map file to csv: input=%s, output=%s'\
+    LOG.debug('Transform map file to csv: input=%s, output=%s'\
         % (inputfile, outputfile))
     genetic_map = transform_loc_map(inputfile)
-    log.info('- %s markers found in %s' % (len(genetic_map), inputfile))
+    LOG.info('- %s markers found in %s' % (len(genetic_map), inputfile))
     write_down_map(outputfile, genetic_map)
-

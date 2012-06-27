@@ -31,9 +31,9 @@ import tarfile
 import tempfile
 import zipfile
 
-log = logging.getLogger('pymq2')
+LOG = logging.getLogger('pymq2')
 
-__version__ = 0.1.0
+__version__ = '0.1.0'
 
 
 def set_tmp_folder():
@@ -49,35 +49,34 @@ def set_tmp_folder():
     return tempfile.gettempdir()
 
 
-
 def extract_zip(filename):
     """ Extract the sources in a temporary folder.
     :arg filename, name of the zip file containing the data from MapQTL
     which will be extracted
     """
     extract_dir = tempfile.gettempdir()
-    log.info("Extracting %s in %s " % (filename, extract_dir))
+    LOG.info("Extracting %s in %s " % (filename, extract_dir))
     if not os.path.exists(extract_dir):
         try:
             os.mkdir(extract_dir)
         except IOError, err:
-            log.info("Could not generate the folder %s" % extract_dir)
-            log.debug("Error: %s" % err)
+            LOG.info("Could not generate the folder %s" % extract_dir)
+            LOG.debug("Error: %s" % err)
 
     if zipfile.is_zipfile(filename):
         try:
             zfile = zipfile.ZipFile(filename, "r")
             zfile.extractall(extract_dir)
             zfile.close()
-        except Exception, err:
-            log.debug("Error: %s" % err)
+        except IOError, err:
+            LOG.debug("Error: %s" % err)
     else:
         try:
             tar = tarfile.open(filename)
             tar.extractall(extract_dir)
             tar.close()
         except tarfile.ReadError, err:
-            log.debug("Error: %s" % err)
+            LOG.debug("Error: %s" % err)
 
     return extract_dir
 
@@ -93,9 +92,10 @@ def read_input_file(filename, sep='\t'):
         stream = open(filename, 'r')
         for row in stream:
             output.append(row.strip().split(sep))
-    except Exception, err:
-        log.info("Something wrong happend while reading the file %s " % filename)
-        log.debug("ERROR: %s" % err)
+    except IOError, err:
+        LOG.info("Something wrong happend while reading the file %s "\
+        % filename)
+        LOG.debug("ERROR: %s" % err)
     finally:
         if stream:
             stream.close()
