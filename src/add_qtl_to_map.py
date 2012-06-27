@@ -25,7 +25,10 @@
 
 import logging
 import os
-from pymq2 import read_input_file
+try:
+    from pymq2 import read_input_file
+except ImportError:
+    from src import read_input_file
 
 log = logging.getLogger('pymq2')
 
@@ -67,7 +70,7 @@ def add_qtl_to_marker(marker, qtls):
     return marker
 
 
-def add_qtl_to_map(folder, qtlfile, mapfile, outputfile='map-with-qtl.csv'):
+def add_qtl_to_map(qtlfile, mapfile, outputfile='map_with_qtl.csv'):
     """Main function.
     This function add the number of QTLs found for each marker in the map.
 
@@ -84,16 +87,8 @@ def add_qtl_to_map(folder, qtlfile, mapfile, outputfile='map-with-qtl.csv'):
     markers.append(map_list[0])
     qtl_cnt = 0
     for marker in map_list[1:]:
-        markers.append(add_qtl_to_marker(marker, qtl_list))
+        markers.append(add_qtl_to_marker(marker, qtl_list[1:]))
         qtl_cnt = qtl_cnt + int(markers[-1][-1])
     log.info('- %s markers processed in %s' % (len(markers), mapfile))
     log.info('- %s QTLs located in the map: %s' % (qtl_cnt, outputfile))
-    write_down_map(os.path.join(folder, outputfile), markers)
-
-
-if __name__ == '__main__':
-    FOLDER = '/home/pierrey/Desktop/Yuni/'
-    MAP = FOLDER + 'YuniF2map.csv'
-    QTLS = FOLDER + 'QTL_mk.csv'
-    OUTPUT = 'YuniF2map-withQtl.csv'
-    main(FOLDER, qtlfile=QTLS, mapfile=MAP, outputfile=OUTPUT)
+    write_down_map(outputfile, markers)

@@ -26,7 +26,10 @@
 
 import logging
 import os
-from pymq2 import read_input_file
+try:
+    from pymq2 import read_input_file
+except ImportError:
+    from src import read_input_file
 
 log = logging.getLogger('pymq2')
 
@@ -85,7 +88,7 @@ def write_down_map(outputfile, genetic_map):
     log.info('Wrote genetic map in file %s' % outputfile)
 
 
-def transform_mapfile_to_csv(folder, inputfile, outputfile='map.csv'):
+def transform_mapfile_to_csv(inputfile, outputfile='map.csv'):
     """Main function.
     This function transform the map file into a csv file.
 
@@ -93,13 +96,9 @@ def transform_mapfile_to_csv(folder, inputfile, outputfile='map.csv'):
     :kwarg outputfile, the name of the output file in which the map will
     be written.
     """
-    genetic_map = transform_loc_map(os.path.join(folder, inputfile))
+    log.debug('Transform map file to csv: input=%s, output=%s'\
+        % (inputfile, outputfile))
+    genetic_map = transform_loc_map(inputfile)
     log.info('- %s markers found in %s' % (len(genetic_map), inputfile))
-    write_down_map(os.path.join(folder, outputfile), genetic_map)
+    write_down_map(outputfile, genetic_map)
 
-
-if __name__ == '__main__':
-    FOLDER = '/home/pierrey/Desktop/Yuni/'
-    INPUT = FOLDER + 'YuniF2.map'
-    OUTPUT = 'YuniF2map.csv'
-    main(FOLDER, inputfile=INPUT, outputfile=OUTPUT)

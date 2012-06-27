@@ -27,10 +27,11 @@ import datetime
 import logging
 import os
 import shutil
-import tarfile
-import tempfile
-import zipfile
-from pymq2 import read_input_file
+
+try:
+    from pymq2 import read_input_file, MQ2Exception
+except ImportError:
+    from src import read_input_file, MQ2Exception
 
 log = logging.getLogger('pymq2')
 
@@ -114,78 +115,29 @@ def write_down_qtl_found(outputfile, qtls):
     log.info('Wrote QTLs in file %s' % outputfile)
 
 
-def set_tmp_folder():
-    """ Create a temporary folder using the current time in which
-    the zip can be extracted and which should be destroyed afterward.
-    """
-    output = "%s" % datetime.datetime.now()
-    output = output.rsplit('.', 1)[0].strip()
-    for char in [' ', ':', '.', '-']:
-        output = output.replace(char, '')
-    output.strip()
-    tempfile.tempdir = '%s/%s' % (tempfile.gettempdir(), output)
-
-
-
-def extract_zip(filename):
-    """ Extract the sources in a temporary folder.
-    :arg filename, name of the zip file containing the data from MapQTL
-    which will be extracted
-    """
-    extract_dir = tempfile.gettempdir()
-    log.info("Extracting %s in %s " % (filename, extract_dir))
-    if not os.path.exists(extract_dir):
-        try:
-            os.mkdir(extract_dir)
-        except IOError, err:
-            log.info("Could not generate the folder %s" % extract_dir)
-            log.debug("Error: %s" % err)
-
-    if zipfile.is_zipfile(filename):
-        try:
-            zfile = zipfile.ZipFile(filename, "r")
-            zfile.extractall(extract_dir)
-            zfile.close()
-        except Exception, err:
-            log.debug("Error: %s" % err)
-    else:
-        try:
-            tar = tarfile.open(filename)
-            tar.extractall(extract_dir)
-            tar.close()
-        except tarfile.ReadError, err:
-            log.debug("Error: %s" % err)
-
-    return extract_dir
-
-
-def parse_mapqtl_file(folder, sessionid, zipfile = None, lodthreshold=3,
-        outputfile='qtls.csv'):
+def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
+        outputfolder='.', outputfile='qtls.csv'):
     """Main function.
     This function finds all the file fitting the pattern in the given
     folder, then these files are read and for each a list of QTLs is
     retrieved if their LOD value is above the lod threshold provided.
 
-    :arg folder, the path to the folder to look into for the data file.
+    :arg inputfolder, the path to the folder to look into for the data
+    file.
     :arg sessionid, the session ID from MapQTL containing the data, this
     is used to identy which files should be read.
-    :kwarg zipfile, name of the zip file containing the data from MapQTL
     :kwarg lodthreshold, the LOD threshold from which we decide if we
     have a QTL.
+    :kwarg outputfolder, the name of the folder in whici to write down
+    the output files.
     :kwarg outputfile, the name of the file in which the QTLs found in
     the data will be printed.
     """
-    set_tmp_folder()
-    inputfolder = None
-    if zipfile is not None and os.path.exists(zipfile):
-        inputfolder = extract_zip(zipfile)
 
-    if inputfolder is not None:
-        filelist = get_files_to_read(inputfolder, sessionid)
-    else:
-        filelist = get_files_to_read(folder, sessionid)
+    filelist = get_files_to_read(inputfolder, sessionid)
     if not filelist:
-        return
+        raise MQ2Exception('No file corresponds to the session "%s"\
+        ' % sessionid)
     qtls = []
     matrix = read_input_file(filelist[0])
     headers = matrix[0]
@@ -195,15 +147,4 @@ def parse_mapqtl_file(folder, sessionid, zipfile = None, lodthreshold=3,
         matrix = read_input_file(filename)
         qtls.extend(get_qtls_from_mapqtl_data(matrix, lodthreshold, filename))
     log.info('- %s QTLs found in %s' % (len(qtls), filename))
-    write_down_qtl_found(os.path.join(folder, outputfile), qtls)
-    shutil.rmtree(tempfile.gettempdir())
-
-
-if __name__ == '__main__':
-    FOLDER = '/home/pierrey/Desktop/Yuni/'
-    ZIP = FOLDER + 'YuniF2.zip'
-    OUTPUT = 'QTL.csv'
-    SESSION = 3
-    LODTHRES = 3
-    main(FOLDER, SESSION, zipfile=ZIP, lodthreshold=LODTHRES, 
-        outputfile=OUTPUT)
+    write_down_qtl_found(os.path.join(outputfolder, outputfile), qtls)

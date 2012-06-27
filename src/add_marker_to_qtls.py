@@ -26,7 +26,10 @@
 
 import logging
 import os
-from pymq2 import read_input_file
+try:
+    from pymq2 import read_input_file
+except ImportError:
+    from src import read_input_file
 
 log = logging.getLogger('pymq2')
 
@@ -77,11 +80,13 @@ def add_marker_to_qtl(qtl, map_list):
     return closest
 
 
-def add_marker_to_qtls(folder, qtlfile, mapfile, outputfile='map.csv'):
+def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtl_with_mk.csv'):
     """Main function.
     This function transform the map file into a csv file.
 
-    :arg inpufile, the map file from MapQTL to be transformed to csv.
+    :arg qtlfile, the map file from MapQTL to be transformed to csv.
+    :arg mapfile, a CSV representation of the map used during the MapQTL
+    analysis.
     :kwarg outputfile, the name of the output file in which the map will
     be written.
     """
@@ -96,12 +101,4 @@ def add_marker_to_qtls(folder, qtlfile, mapfile, outputfile='map.csv'):
         qtl.append(add_marker_to_qtl(qtl, map_list))
         qtls.append(qtl)
     log.info('- %s QTLs processed in %s' % (len(qtls), qtlfile))
-    write_down_qtl_found(os.path.join(folder, outputfile), qtls)
-
-
-if __name__ == '__main__':
-    FOLDER = '/home/pierrey/Desktop/Yuni/'
-    MAP = FOLDER + 'YuniF2map.csv'
-    QTLS = FOLDER + 'QTL.csv'
-    OUTPUT = 'QTL_mk.csv'
-    main(FOLDER, qtlfile=QTLS, mapfile=MAP, outputfile=OUTPUT)
+    write_down_qtl_found(outputfile, qtls)
