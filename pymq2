@@ -120,9 +120,8 @@ def main():
     tmp_folder = None
     try:
         if args.zipfile:
-            tmp_folder = set_tmp_folder()
-            extract_zip(args.zipfile)
-            mapqtl_folder = tempfile.gettempdir()
+            mapqtl_folder = set_tmp_folder()
+            extract_zip(args.zipfile, mapqtl_folder)
         else:
             mapqtl_folder = args.folder
 
