@@ -52,7 +52,7 @@ def write_down_qtl_found(outputfile, qtls):
 
     try:
         for qtl in qtls:
-            stream.write('\t'.join(qtl) + '\n')
+            stream.write(','.join(qtl) + '\n')
     except Exception, err:
         log.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
@@ -90,7 +90,7 @@ def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtl_with_mk.csv'):
     :kwarg outputfile, the name of the output file in which the map will
     be written.
     """
-    qtl_list = read_input_file(qtlfile)
+    qtl_list = read_input_file(qtlfile, ',')
     map_list = read_input_file(mapfile, ',')
     if not qtl_list or not map_list:
         return

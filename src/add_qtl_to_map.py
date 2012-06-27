@@ -80,7 +80,7 @@ def add_qtl_to_map(qtlfile, mapfile, outputfile='map_with_qtl.csv'):
     :kwarg outputfile, the name of the output file in which the map will
     be written.
     """
-    qtl_list = read_input_file(qtlfile)
+    qtl_list = read_input_file(qtlfile, ',')
     map_list = read_input_file(mapfile, ',')
     map_list[0].append('# QTLs')
     markers = []
