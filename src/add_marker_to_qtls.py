@@ -80,7 +80,7 @@ def add_marker_to_qtl(qtl, map_list):
     return closest
 
 
-def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtl_with_mk.csv'):
+def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtls_with_mk.csv'):
     """Main function.
     This function transform the map file into a csv file.
 

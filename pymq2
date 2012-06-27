@@ -142,9 +142,9 @@ def main():
 
         add_marker_to_qtls(qtlfile='qtls.csv',
             mapfile=map_file,
-            outputfile='qtl_with_mk.csv')
+            outputfile='qtls_with_mk.csv')
 
-        add_qtl_to_map(qtlfile='qtl_with_mk.csv',
+        add_qtl_to_map(qtlfile='qtls_with_mk.csv',
             mapfile=map_file,
             outputfile='map_with_qtl.csv')
     except MQ2Exception, err:
