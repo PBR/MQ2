@@ -35,6 +35,30 @@ except ImportError:
 LOG = logging.getLogger('pymq2')
 
 
+def append_count_to_matrix(qtl_matrix, lod_threshold):
+    """ Append an extra column at the end of the matrix file containing
+    for each row (marker) the number of QTL found if the marker is known
+    ie: Locus != ''
+    :arg qtl_matrix, the matrix in which to save the output.
+    :arg threshold, threshold used to determine if a given LOD value is
+    reflective the presence of a QTL.
+    """
+    tmp = list(qtl_matrix[0])
+    tmp.append('# QTLs')
+    qtl_matrix[0] = tmp
+    cnt = 1
+    while cnt < len(qtl_matrix):
+        row = list(qtl_matrix[cnt])
+        nr_qtl = 0
+        for cel in row[4:]:
+            if cel and float(cel) > float(lod_threshold):
+                nr_qtl = nr_qtl + 1
+        row.append(str(nr_qtl))
+        qtl_matrix[cnt] = row
+        cnt = cnt + 1
+    return qtl_matrix
+
+
 def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
     """Extract the QTLs found by MapQTL reading its file.
     This assume that there is only one QTL per linkage group.
@@ -190,6 +214,7 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
     write_down_qtl_found(qtl_outputfile, qtls)
     if write_matrix:
         qtl_matrix = zip(*qtl_matrix)
+        qtl_matrix = append_count_to_matrix(qtl_matrix, lodthreshold)
         write_down_qtl_found(qtl_matrixfile, qtl_matrix)
     else:
         raise MQ2NoMatrixException(msg)
