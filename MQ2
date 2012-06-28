@@ -33,12 +33,12 @@ import sys
 import tempfile
 
 try:
-    from pymq2 import (set_tmp_folder, extract_zip, MQ2Exception,
+    from MQ2 import (set_tmp_folder, extract_zip, MQ2Exception,
         MQ2NoMatrixException)
-    from pymq2.generate_map_from_mapqtl import generate_map_from_mapqtl
-    from pymq2.parse_mapqtl_file import parse_mapqtl_file
-    from pymq2.add_marker_to_qtls import add_marker_to_qtls
-    from pymq2.add_qtl_to_map import add_qtl_to_map
+    from MQ2.generate_map_from_mapqtl import generate_map_from_mapqtl
+    from MQ2.parse_mapqtl_file import parse_mapqtl_file
+    from MQ2.add_marker_to_qtls import add_marker_to_qtls
+    from MQ2.add_qtl_to_map import add_qtl_to_map
 except:
     from src import (set_tmp_folder, extract_zip, MQ2Exception,
         MQ2NoMatrixException)
@@ -49,7 +49,8 @@ except:
 
 # Initial simple logging stuff
 logging.basicConfig()
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
+
 if '--debug' in sys.argv:
     LOG.setLevel(logging.DEBUG)
 elif '--verbose' in sys.argv:
