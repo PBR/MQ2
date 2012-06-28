@@ -41,7 +41,6 @@ def set_tmp_folder():
     the zip can be extracted and which should be destroyed afterward.
     """
     output = "%s" % datetime.datetime.now()
-    output = output.rsplit('.', 1)[0].strip()
     for char in [' ', ':', '.', '-']:
         output = output.replace(char, '')
     output.strip()
