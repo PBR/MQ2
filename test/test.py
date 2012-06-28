@@ -59,6 +59,8 @@ def clean_directory():
             os.unlink(filename)
 
 
+## TODO: check the file exists is good, check that the file has the
+## expected content is even better...
 class MQ2tests(unittest.TestCase):
     """ MQ² tests. """
 
