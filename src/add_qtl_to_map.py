@@ -25,11 +25,11 @@
 
 import logging
 try:
-    from pymq2 import read_input_file
+    from MQ2 import read_input_file
 except ImportError:
     from src import read_input_file
 
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
 
 
 def write_down_map(outputfile, genetic_map):

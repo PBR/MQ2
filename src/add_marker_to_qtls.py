@@ -26,11 +26,11 @@
 
 import logging
 try:
-    from pymq2 import read_input_file, MQ2NoSuchSessionException
+    from MQ2 import read_input_file, MQ2NoSuchSessionException
 except ImportError:
     from src import read_input_file, MQ2NoSuchSessionException
 
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
 
 
 def write_down_qtl_found(outputfile, qtls):

@@ -31,7 +31,7 @@ import tarfile
 import tempfile
 import zipfile
 
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
 
 __version__ = '0.1.0'
 

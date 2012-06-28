@@ -26,13 +26,13 @@
 import logging
 import os
 try:
-    from pymq2 import (read_input_file, MQ2Exception,
+    from MQ2 import (read_input_file, MQ2Exception,
         MQ2NoMatrixException, MQ2NoSuchSessionException)
 except ImportError:
     from src import (read_input_file, MQ2Exception,
         MQ2NoMatrixException, MQ2NoSuchSessionException)
 
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
 
 
 def append_count_to_matrix(qtl_matrix, lod_threshold):

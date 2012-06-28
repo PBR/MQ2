@@ -26,7 +26,7 @@
 
 import logging
 
-LOG = logging.getLogger('pymq2')
+LOG = logging.getLogger('MQ2')
 
 
 def transform_loc_map(inputfile):
