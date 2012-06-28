@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 
 """
- (c) Copyright Pierre-Yves Chibon -- 2011, 2012
+ (c) 2011, 2012 - Copyright Pierre-Yves Chibon
 
  Distributed under License GPLv3 or later
  You can find a copy of this license on the website
@@ -191,8 +191,8 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
     filelist = get_files_to_read(inputfolder, sessionid)
     if not filelist:
         raise MQ2NoSuchSessionException(
-        'No file corresponds to the session "%s"\
-        ' % sessionid)
+        'No file corresponds to the session "%s"'\
+        % sessionid)
     qtls = []
     qtl_matrix = []
     matrix = read_input_file(filelist[0])

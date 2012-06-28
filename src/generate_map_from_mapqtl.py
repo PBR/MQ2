@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 
 """
- (c) Copyright Pierre-Yves Chibon -- 2011, 2012
+ (c) 2011, 2012 - Copyright Pierre-Yves Chibon
 
  Distributed under License GPLv3 or later
  You can find a copy of this license on the website
@@ -27,9 +27,9 @@
 import logging
 from parse_mapqtl_file import get_files_to_read
 try:
-    from MQ2 import read_input_file
+    from MQ2 import read_input_file, MQ2NoSuchSessionException
 except ImportError:
-    from src import read_input_file
+    from src import read_input_file, MQ2NoSuchSessionException
 
 LOG = logging.getLogger('MQ2')
 
@@ -74,8 +74,8 @@ def generate_map_from_mapqtl(inputfolder, sessionid,
     filelist = get_files_to_read(inputfolder, sessionid)
     if not filelist:
         raise MQ2NoSuchSessionException(
-        'No file corresponds to the session "%s"\
-        ' % sessionid)
+        'No file corresponds to the session "%s"'\
+        % sessionid)
     filename = filelist[0]
     matrix = read_input_file(filename)
     output = []
