@@ -34,16 +34,26 @@ There are two ways to install this project:
 
 From the sources
 
-* clone the source
- git clone https://github.com/PBR/MQ2.git
-* Enter the folder and run the setup.py script
- cd MQ2
+- clone the source
 
+::
+
+ git clone https://github.com/PBR/MQ2.git
+
+- Enter the folder and run the setup.py script
+
+::
+
+ cd MQ2
+ 
  sudo python setup.py install
 
 From pypi
 
-* Download and install the project from pypi:
+- Download and install the project from pypi
+
+::
+
  easy_install MQ2
 
 
