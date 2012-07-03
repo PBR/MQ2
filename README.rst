@@ -45,7 +45,6 @@ From the sources
 ::
 
  cd MQ2
- 
  sudo python setup.py install
 
 From pypi
