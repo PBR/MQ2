@@ -38,9 +38,10 @@ def write_down_qtl_found(outputfile, qtls):
     specified outputfile.
     The name of the trait is extracted from the name of the inputfile, it
     is found between the 'IM)_' and '.mqo' of the filename.
-    :arg outputfile, name of the outputfile in which the QTLs found are
-    written.
-    :arg qtls, the list of QTLs identified in the input file.
+
+    :arg outputfile: name of the outputfile in which the QTLs found are
+        written.
+    :arg qtls: the list of QTLs identified in the input file.
     """
 
     try:
@@ -63,8 +64,9 @@ def write_down_qtl_found(outputfile, qtls):
 
 def add_marker_to_qtl(qtl, map_list):
     """Add the closest marker to the given QTL.
-    :arg qtl, a QTL found by MapQTL.
-    :arg map_list, the genetic map containing the list of markers.
+
+    :arg qtl: a QTL found by MapQTL.
+    :arg map_list: the genetic map containing the list of markers.
     """
     closest = ''
     diff = None
@@ -83,10 +85,10 @@ def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtls_with_mk.csv'):
     """Main function.
     This function transform the map file into a csv file.
 
-    :arg qtlfile, the map file from MapQTL to be transformed to csv.
-    :arg mapfile, a CSV representation of the map used during the MapQTL
-    analysis.
-    :kwarg outputfile, the name of the output file in which the map will
+    :arg qtlfile: the map file from MapQTL to be transformed to csv.
+    :arg mapfile: a CSV representation of the map used during the MapQTL
+        analysis.
+    :kwarg outputfile: the name of the output file in which the map will
     be written.
     """
     qtl_list = read_input_file(qtlfile, ',')
