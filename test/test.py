@@ -217,5 +217,6 @@ class MQ2tests(unittest.TestCase):
         self.assertTrue(found_files == [])
 
 
-SUITE = unittest.TestLoader().loadTestsFromTestCase(MQ2tests)
-unittest.TextTestRunner(verbosity=2).run(SUITE)
+if __name__ == '__main__':
+    SUITE = unittest.TestLoader().loadTestsFromTestCase(MQ2tests)
+    unittest.TextTestRunner(verbosity=2).run(SUITE)
