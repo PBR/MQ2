@@ -64,6 +64,23 @@ To run the project, simply run the ``MQ2`` script provided.
 See ``MQ2 --help`` or ``MQ2 -h`` for the different argument available.
 
 
+Testing:
+--------
+
+This project contains unit-tests allowing you to check if the code
+behaves as it should.
+
+To run them, two ways, either::
+
+ nosetests
+
+from the ``MQ2`` folder, or::
+
+ python test.py
+
+within the ``test`` folder
+
+
 License:
 --------
 
