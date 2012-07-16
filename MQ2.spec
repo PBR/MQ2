@@ -29,7 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 
  
 %files
-%doc COPYING README
+%doc COPYING README.rst
 # For noarch packages: sitelib
 %{python_sitelib}/*
 %{_bindir}/MQ2
