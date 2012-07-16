@@ -19,5 +19,17 @@ setup(
     package_dir={'MQ2': 'src'},
     packages=['MQ2'],
     scripts=["MQ2"],
+    classifiers=[
+          'Development Status :: 5 - Production/Stable',
+          'Environment :: Console',
+          'Intended Audience :: End Users/Desktop',
+          'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+          'Programming Language :: Python',
+          'Topic :: Software Development :: Librariess',
+          'Topic :: Scientific/Engineering :: Bio-Informatics',
+          ],
     )
 
