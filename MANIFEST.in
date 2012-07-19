@@ -1,2 +1,2 @@
 include COPYING README.rst MQ2.spec
-include test
+include test/*
