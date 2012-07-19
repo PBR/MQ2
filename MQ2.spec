@@ -11,6 +11,7 @@ Source0:        MQ2-0.1.0.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel
+BuildRequires:  python-setuptools
 
 %description
 A python library to process output files from MapQTL.
@@ -27,6 +28,8 @@ A python library to process output files from MapQTL.
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
+%check
+%{__python} setup.py test
  
 %files
 %doc COPYING README.rst
