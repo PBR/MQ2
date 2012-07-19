@@ -5,7 +5,7 @@ Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Process MapQTL output to find QTLs hotspot
 
-License:        BSD
+License:        GPLv3+
 URL:            https://github.com/PBR/pymq2
 Source0:        MQ2-0.1.0.tar.gz
 
