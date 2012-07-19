@@ -29,7 +29,7 @@ setup(
           'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
           'Programming Language :: Python',
-          'Topic :: Software Development :: Librariess',
+          'Topic :: Software Development :: Libraries',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
           ],
     )
