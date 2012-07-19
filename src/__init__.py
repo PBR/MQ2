@@ -65,7 +65,15 @@ def extract_zip(filename, extract_dir):
     if zipfile.is_zipfile(filename):
         try:
             zfile = zipfile.ZipFile(filename, "r")
-            zfile.extractall(extract_dir)
+            for name in zfile.namelist():
+                if os.path.dirname(name):
+                    curdir = os.path.join(extract_dir, os.path.dirname(name))
+                    if not os.path.exists(curdir):
+                        os.mkdir(curdir)
+                outfile = open(os.path.join(extract_dir, name), 'wb')
+                outfile.write(zfile.read(name))
+                outfile.flush()
+                outfile.close()
             zfile.close()
         except IOError, err:
             LOG.debug("Error: %s" % err)
