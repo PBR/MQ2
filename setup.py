@@ -5,7 +5,7 @@
 Setup script
 """
 
-from distutils.core import setup
+from setuptools import setup
 from src import __version__
 
 setup(
@@ -19,6 +19,7 @@ setup(
     package_dir={'MQ2': 'src'},
     packages=['MQ2'],
     scripts=["MQ2"],
+    test_suite = "test.test.MQ2tests",
     classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Console',
