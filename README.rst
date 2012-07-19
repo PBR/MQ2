@@ -21,6 +21,8 @@ Sources:  https://github.com/PBR/MQ2
 
 Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-0.1.0.tar.gz
 
+Run it on the web at: http://www.plantbreeding.wur.nl/mq2
+
 
 Dependencies:
 -------------
