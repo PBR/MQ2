@@ -24,7 +24,7 @@ Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-0.1.0.tar.gz
 
 Dependencies:
 -------------
-- python (tested on 2.7.3 and 2.6.6)
+- python (2.5 minimum)
 
 
 Install the project:
