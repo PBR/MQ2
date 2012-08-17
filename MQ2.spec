@@ -1,11 +1,11 @@
 Name:           MQ2
-Version:        0.1.0
+Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Process MapQTL output to find QTLs hotspot
 
 License:        GPLv3+
 URL:            https://github.com/PBR/pymq2
-Source0:        MQ2-0.1.0.tar.gz
+Source0:        http://pypi.python.org/packages/source/M/MQ2/MQ2-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -36,5 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/MQ2
 
 %changelog
+* Fri Aug 17 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 0.1.2-1
+- Update to release 0.1.2
+
 * Tue Jun 26 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 0.1.0-1
 - Initial spec file
