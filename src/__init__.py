@@ -33,7 +33,7 @@ import zipfile
 
 LOG = logging.getLogger('MQ2')
 
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 
 
 def set_tmp_folder():
