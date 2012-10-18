@@ -59,6 +59,25 @@ def append_count_to_matrix(qtl_matrix, lod_threshold):
     return qtl_matrix
 
 
+def get_files_to_read(folder, sessionid):
+    """ Reads a given folder and return all the files from MapQTL which
+    are from the specified session and are of interest for us.
+    So it looks for "Session <sessionid> (IM)_<exp>_<metabolite>.mqo" in
+    all the files of the folder.
+    :arg folder, path to the folder containing the data
+    :arg sessionid, session given in the file name and present in the file
+    name
+    """
+    filelist = []
+    for root, dirs, files in os.walk(folder):
+        for filename in files:
+            if filename.startswith('Session %s' % sessionid) \
+                and filename.endswith('.mqo'):
+                filename = os.path.join(root, filename)
+                filelist.append(filename)
+    return filelist
+
+
 def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
     """Extract the QTLs found by MapQTL reading its file.
     This assume that there is only one QTL per linkage group.
@@ -123,48 +142,6 @@ def get_qtls_matrix(qtl_matrix, matrix, inputfile):
     return qtl_matrix
 
 
-def get_files_to_read(folder, sessionid):
-    """ Reads a given folder and return all the files from MapQTL which
-    are from the specified session and are of interest for us.
-    So it looks for "Session <sessionid> (IM)_<exp>_<metabolite>.mqo" in
-    all the files of the folder.
-    :arg folder, path to the folder containing the data
-    :arg sessionid, session given in the file name and present in the file
-    name
-    """
-    filelist = []
-    for root, dirs, files in os.walk(folder):
-        for filename in files:
-            if filename.startswith('Session %s' % sessionid) \
-                and filename.endswith('.mqo'):
-                filename = os.path.join(root, filename)
-                filelist.append(filename)
-    return filelist
-
-
-def write_down_qtl_found(outputfile, qtls):
-    """ Write down all the QTLs found in the specified inputfile to the
-    specified outputfile.
-    The name of the trait is extracted from the name of the inputfile, it
-    is found between the 'IM)_' and '.mqo' of the filename.
-    :arg outputfile, name of the outputfile in which the QTLs found are
-    written.
-    :arg qtls, the list of QTLs identified in the input file.
-    """
-
-    try:
-        stream = open(outputfile, 'w')
-        for qtl in qtls:
-            stream.write(','.join(qtl) + '\n')
-    except IOError, err:
-        LOG.info('An error occured while writing the QTLs to the file %s' \
-        % outputfile)
-        LOG.debug("Error: %s" % err)
-    finally:
-        stream.close()
-    LOG.info('Wrote QTLs in file %s' % outputfile)
-
-
 def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
         qtl_outputfile='qtls.csv',
         qtl_matrixfile='qtls_matrix.csv'):
@@ -218,3 +195,26 @@ def parse_mapqtl_file(inputfolder, sessionid, lodthreshold=3,
         write_down_qtl_found(qtl_matrixfile, qtl_matrix)
     else:
         raise MQ2NoMatrixException(msg)
+
+
+def write_down_qtl_found(outputfile, qtls):
+    """ Write down all the QTLs found in the specified inputfile to the
+    specified outputfile.
+    The name of the trait is extracted from the name of the inputfile, it
+    is found between the 'IM)_' and '.mqo' of the filename.
+    :arg outputfile, name of the outputfile in which the QTLs found are
+    written.
+    :arg qtls, the list of QTLs identified in the input file.
+    """
+
+    try:
+        stream = open(outputfile, 'w')
+        for qtl in qtls:
+            stream.write(','.join(qtl) + '\n')
+    except IOError, err:
+        LOG.info('An error occured while writing the QTLs to the file %s' \
+        % outputfile)
+        LOG.debug("Error: %s" % err)
+    finally:
+        stream.close()
+    LOG.info('Wrote QTLs in file %s' % outputfile)
