@@ -91,6 +91,26 @@ def extract_zip(filename, extract_dir):
 
     return extract_dir
 
+def get_matrix_dimensions(filename):
+    """ Reads in a matrix file (comma separated) and returns the number
+    of rows and columns.
+    :arg filename, the full path to the file to read.
+    """
+    stream = None
+    try:
+        stream = open(filename, 'r')
+        length = len(stream.readlines())
+        stream.seek(0)
+        width = len(stream.readline().split(','))
+        return (length, width)
+    except IOError, err:
+        LOG.info("Something wrong happend while reading the file %s "\
+        % filename)
+        LOG.debug("ERROR: %s" % err)
+    finally:
+        if stream:
+            stream.close()
+
 
 def read_input_file(filename, sep='\t'):
     """Reads a given inputfile (tab delimited) and returns a matrix
