@@ -56,7 +56,7 @@ def clean_directory():
     if os.path.exists('demo_test') and os.path.isdir('demo_test'):
         shutil.rmtree('demo_test')
     for filename in os.listdir('.'):
-        if filename.endswith('.csv'):
+        if filename.endswith('.csv') or filename.endswith('.map'):
             os.unlink(filename)
 
 
