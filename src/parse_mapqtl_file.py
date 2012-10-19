@@ -145,6 +145,28 @@ def _extrac_qtl(peak, block, lod_threshold):
     return qtls
 
 
+def _order_linkage_group(group):
+    """ For a given group (ie: a list containing [marker, position])
+    order the list according to their position.
+    """
+    tmp = {}
+    for row in group:
+        if float(row[1]) in tmp:
+            tmp[float(row[1])].append(row[0])
+        else:
+            tmp[float(row[1])] = [row[0]]
+    
+    keys = tmp.keys()
+    keys.sort()
+    output = []
+    for key in keys:
+        for entry in tmp[key]:
+            if not entry:
+                entry = '-unknown-'
+            output.append([entry, str(key)])
+    return output
+
+
 def generate_map_chart_file(qtl_matrix, lod_threshold,
     map_chart_file='map_chart.map'):
     """ This function converts our QTL matrix file into a MapChart input
@@ -162,17 +184,22 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
     block = []
     for row in qtl_matrix[1:]:
         linkgrp = qtl_matrix[cnt - 1][1]
+        if cnt == 1:
+            linkgrp = qtl_matrix[cnt][1]
 
         if not linkgrp in tmp_dic:
             tmp_dic[linkgrp] = [[], []]
-        tmp_dic[linkgrp][0].append([row[3], row[2]])
 
         infos = row[1:4]
         if qtl_matrix[cnt][1] != linkgrp:
             qtls = _extrac_qtl(tmp, block, lod_threshold)
             tmp_dic[linkgrp][1] = qtls
+            linkgrp = qtl_matrix[cnt][1]
+            tmp_dic[linkgrp] = [[], []]
             tmp = {}
             block = []
+
+        tmp_dic[linkgrp][0].append([row[3], row[2]])
 
         colcnt = 4
         for cel in row[4:-1]:
@@ -191,16 +218,14 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
                     tmp[qtl_matrix[0][colcnt]] = temp
             colcnt = colcnt + 1
         cnt = cnt + 1
-    
-    del(tmp_dic[qtl_matrix[0][1]])
-    
+
     try:
         stream = open(map_chart_file, 'w')
         for key in tmp_dic:
             if tmp_dic[key]:
                 stream.write('group %s\n' % key)
-                for entries in tmp_dic[key][0]:
-                    stream.write('  '.join(entries) + '\n')
+                for entry in _order_linkage_group(tmp_dic[key][0]):
+                    stream.write('  '.join(entry) + '\n')
                 if tmp_dic[key][1]:
                     stream.write('\n')
                     stream.write('qtls\n')
