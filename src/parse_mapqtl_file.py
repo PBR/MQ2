@@ -180,7 +180,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
     """
     tmp_dic = {}
     cnt = 1
-    tmp = []
+    tmp = {}
     block = []
     for row in qtl_matrix[1:]:
         linkgrp = qtl_matrix[cnt - 1][1]
@@ -206,7 +206,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
             blockrow = infos[:]
             blockrow.extend([qtl_matrix[0][colcnt], cel])
             block.append(blockrow)
-            if float(cel) >= lod_threshold:
+            if cel.strip() != '' and float(cel) >= float(lod_threshold):
                 temp = infos[:]
                 if not tmp:
                     temp.extend([qtl_matrix[0][colcnt], cel])
