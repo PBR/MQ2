@@ -24,38 +24,14 @@ Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-0.1.2.tar.gz
 Run it on the web at: http://www.plantbreeding.wur.nl/mq2
 
 
-Dependencies:
--------------
-- python (2.5 minimum)
+Documentation:
+--------------
 
+The project contains some documentation on how to install, run and contribute
+to this project.
 
-Install the project:
---------------------
-
-There are two ways to install this project:
-
-From the sources
-
-- clone the source
-
-::
-
- git clone https://github.com/PBR/MQ2.git
-
-- Enter the folder and run the setup.py script
-
-::
-
- cd MQ2
- sudo python setup.py install
-
-From pypi
-
-- Download and install the project from pypi
-
-::
-
- easy_install MQ2
+The documentation can be found:
+- online at: https://github.com/PBR/MQ2/tree/master/doc
 
 
 Run the project:
