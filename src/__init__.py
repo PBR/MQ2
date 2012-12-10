@@ -61,6 +61,7 @@ def extract_zip(filename, extract_dir):
         except IOError, err:
             LOG.info("Could not generate the folder %s" % extract_dir)
             LOG.debug("Error: %s" % err)
+            return
 
     if zipfile.is_zipfile(filename):
         try:
@@ -70,7 +71,7 @@ def extract_zip(filename, extract_dir):
                     curdir = os.path.join(extract_dir, os.path.dirname(name))
                     if not os.path.exists(curdir):
                         os.mkdir(curdir)
-                    continue
+                        continue
                 outfile = open(os.path.join(extract_dir, name), 'wb')
                 outfile.write(zfile.read(name))
                 outfile.flush()
