@@ -109,30 +109,24 @@ def _extrac_qtl(peak, block, lod_threshold):
     if not peak:
         return qtls
     for trait in peak:
-        if (float(peak[trait][-1]) - float(lod_threshold)) < 2:
-            threshold = float(peak[trait][-1]) - float(lod_threshold)
-        else:
-            threshold = 2
+        threshold = 2
         # Search QTL start
         cnt = block.index(peak[trait])
         start = block[cnt]
         while cnt > 0:
             if block[cnt][-2] == trait:
-                if (float(block[cnt][-1]) - threshold) >= 0:
+                if (float(block[cnt][-1]) - float(threshold)) >= 0:
                     start = block[cnt]
-                if float(block[cnt][-1]) < lod_threshold:
-                    break
             cnt = cnt - 1
+
         # Search QTL end
         end = []
         cnt = block.index(peak[trait])
         end = block[cnt]
         while cnt < len(block):
             if block[cnt][-2] == trait:
-                if (float(block[cnt][-1]) - threshold) >= 0:
+                if (float(block[cnt][-1]) - float(threshold)) >= 0:
                     end = block[cnt]
-                if float(block[cnt][-1]) < lod_threshold:
-                    break
             cnt = cnt + 1
 
         qtl = QTL()
@@ -162,7 +156,7 @@ def _order_linkage_group(group):
     for key in keys:
         for entry in tmp[key]:
             if not entry:
-                entry = '-unknown-'
+                continue
             output.append([entry, str(key)])
     return output
 
@@ -221,8 +215,26 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
 
     try:
         stream = open(map_chart_file, 'w')
-        for key in tmp_dic:
+        keys = tmp_dic.keys()
+        ## Remove unknown group, reason:
+        # The unlinked markers, if present, are always put in group U by
+        # MapQTL. If you don't omit them and there are many (often), then
+        # their names take so much space that it is difficult to fit them
+        # on the page.
+        if 'U' in keys:
+            keys.remove('U')
+        # Try to convert all the groups to float, which would result in
+        # a better sorting. If that fails, fail silently.
+        try:
+            keys = [int(key) for key in keys]
+        except ValueError:
+            pass
+        keys.sort()
+        for key in keys:
+            key = str(key)  # Needed since we might have converted them to int
             if tmp_dic[key]:
+                if key == 'U':
+                    continue
                 stream.write('group %s\n' % key)
                 for entry in _order_linkage_group(tmp_dic[key][0]):
                     stream.write('  '.join(entry) + '\n')
