@@ -32,5 +32,6 @@ Documentation:
 
    install
    usage
+   output
    contribute
 
