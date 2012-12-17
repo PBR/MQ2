@@ -58,7 +58,7 @@ def extract_zip(filename, extract_dir):
     if not os.path.exists(extract_dir):
         try:
             os.mkdir(extract_dir)
-        except IOError, err:
+        except IOError, err:  # pragma: no cover
             LOG.info("Could not generate the folder %s" % extract_dir)
             LOG.debug("Error: %s" % err)
             return
@@ -77,19 +77,20 @@ def extract_zip(filename, extract_dir):
                 outfile.flush()
                 outfile.close()
             zfile.close()
-        except IOError, err:
+        except IOError, err:  # pragma: no cover
             LOG.info("Error while extracting the zip archive.")
             LOG.debug("Error: %s" % err)
     else:
-        try:
+        try:  # pragma: no cover  We only have zipfile to test with
             tar = tarfile.open(filename)
             tar.extractall(extract_dir)
             tar.close()
-        except tarfile.ReadError, err:
+        except tarfile.ReadError, err:  # pragma: no cover
             LOG.info("Error while extracting the tarball.")
             LOG.debug("Error: %s" % err)
 
     return extract_dir
+
 
 def get_matrix_dimensions(filename):
     """ Reads in a matrix file (comma separated) and returns the number
@@ -103,7 +104,7 @@ def get_matrix_dimensions(filename):
         stream.seek(0)
         width = len(stream.readline().split(','))
         return (length, width)
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info("Something wrong happend while reading the file %s "\
         % filename)
         LOG.debug("ERROR: %s" % err)
@@ -123,7 +124,7 @@ def read_input_file(filename, sep='\t'):
         stream = open(filename, 'r')
         for row in stream:
             output.append(row.strip().split(sep))
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info("Something wrong happend while reading the file %s "\
         % filename)
         LOG.debug("ERROR: %s" % err)
