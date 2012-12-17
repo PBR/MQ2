@@ -58,6 +58,10 @@ from the ``MQ2`` folder, or::
 
 within the ``test`` folder
 
+.. note:: if you have ``python-coverage`` installed you can also run the tests
+         as follows to get coverage information::
+
+           nosetests --with-coverage
 
 License:
 --------
