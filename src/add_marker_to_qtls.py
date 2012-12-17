@@ -26,9 +26,9 @@
 
 import logging
 try:
-    from MQ2 import read_input_file, MQ2NoSuchSessionException
+    from MQ2 import read_input_file
 except ImportError:
-    from src import read_input_file, MQ2NoSuchSessionException
+    from src import read_input_file
 
 LOG = logging.getLogger('MQ2')
 
@@ -46,14 +46,14 @@ def write_down_qtl_found(outputfile, qtls):
 
     try:
         stream = open(outputfile, 'w')
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('Could not open the file %s to write in' % outputfile)
         LOG.debug('ERROR: %s' % err)
 
     try:
         for qtl in qtls:
             stream.write(','.join(qtl) + '\n')
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
         LOG.debug('ERROR: %s' % err)
@@ -93,7 +93,7 @@ def add_marker_to_qtls(qtlfile, mapfile, outputfile='qtls_with_mk.csv'):
     """
     qtl_list = read_input_file(qtlfile, ',')
     map_list = read_input_file(mapfile, ',')
-    if not qtl_list or not map_list:
+    if not qtl_list or not map_list:  # pragma: no cover
         return
     qtl_list[0].append('Closest marker')
     qtls = []
