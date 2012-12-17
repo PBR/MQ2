@@ -34,14 +34,14 @@ import tempfile
 
 try:
     from MQ2 import (set_tmp_folder, extract_zip, MQ2Exception,
-        MQ2NoMatrixException)
+        MQ2NoMatrixException, __version__)
     from MQ2.generate_map_from_mapqtl import generate_map_from_mapqtl
     from MQ2.parse_mapqtl_file import parse_mapqtl_file
     from MQ2.add_marker_to_qtls import add_marker_to_qtls
     from MQ2.add_qtl_to_map import add_qtl_to_map
 except:
     from src import (set_tmp_folder, extract_zip, MQ2Exception,
-        MQ2NoMatrixException)
+        MQ2NoMatrixException, __version__)
     from src.generate_map_from_mapqtl import generate_map_from_mapqtl
     from src.parse_mapqtl_file import parse_mapqtl_file
     from src.add_marker_to_qtls import add_marker_to_qtls
@@ -75,6 +75,8 @@ def get_arguments():
                 help="Gives more info about what's going on")
     parser.add_argument('--debug', action='store_true',
                 help="Outputs debugging information")
+    parser.add_argument('--version', action='version',
+                version='MQ² version: %s' % __version__ )
     return parser.parse_args()
 
 
