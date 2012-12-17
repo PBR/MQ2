@@ -57,7 +57,7 @@ class QTL(object):
             self.peak_start_position, self.peak_stop_position,
             self.stop_position)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         """ String representation of the QTL object. """
         return 'QTL<trait: %s, start:%s, peak:%s - %s, stop:%s>' % (
             self.trait,
@@ -145,7 +145,7 @@ def _order_linkage_group(group):
     """
     tmp = {}
     for row in group:
-        if float(row[1]) in tmp:
+        if float(row[1]) in tmp:  # pragma: no cover
             tmp[float(row[1])].append(row[0])
         else:
             tmp[float(row[1])] = [row[0]]
@@ -233,7 +233,8 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
         for key in keys:
             key = str(key)  # Needed since we might have converted them to int
             if tmp_dic[key]:
-                if key == 'U':
+                if key == 'U':  # pragma: no cover
+                    # We removed the key before, we should not be here
                     continue
                 stream.write('group %s\n' % key)
                 for entry in _order_linkage_group(tmp_dic[key][0]):
