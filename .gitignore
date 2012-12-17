@@ -8,3 +8,4 @@ MANIFEST
 *.csv
 *.egg-info
 _build/
+.coverage
