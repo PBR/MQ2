@@ -1,5 +1,5 @@
 Name:           MQ2
-Version:        0.1.2
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        Process MapQTL output to find QTLs hotspot
 
@@ -30,12 +30,16 @@ rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py test
  
 %files
-%doc COPYING README.rst
+%doc COPYING README.rst doc/
 # For noarch packages: sitelib
 %{python_sitelib}/*
 %{_bindir}/MQ2
 
 %changelog
+* Mon Dec 17 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 0.2.0-1
+- Update to release 0.2.0
+- Add the documentation folder as %%doc
+
 * Fri Aug 17 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 0.1.2-1
 - Update to release 0.1.2
 
