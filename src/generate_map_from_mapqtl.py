@@ -41,7 +41,7 @@ def write_down_map(outputfile, genetic_map):
     """
     try:
         stream = open(outputfile, 'w')
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('Could not open the file %s to write in' % outputfile)
         LOG.debug("Error: %s" % err)
 
@@ -49,7 +49,7 @@ def write_down_map(outputfile, genetic_map):
         #stream.write("Marker, Linkage group, Position\n")
         for entry in genetic_map:
             stream.write(','.join(entry) + "\n")
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('An error occured while writing the map to the file %s' \
             % outputfile)
         LOG.debug("Error: %s" % err)

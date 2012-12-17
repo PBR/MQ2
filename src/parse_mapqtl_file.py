@@ -245,7 +245,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
                         stream.write('%s \n' % qtl.to_string())
                 stream.write('\n')
                 stream.write('\n')
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('An error occured while writing the map chart map ' \
             'to the file %s' % map_chart_file)
         LOG.debug("Error: %s" % err)
@@ -413,7 +413,7 @@ def write_down_qtl_found(outputfile, qtls):
         stream = open(outputfile, 'w')
         for qtl in qtls:
             stream.write(','.join(qtl) + '\n')
-    except IOError, err:
+    except IOError, err:  # pragma: no cover
         LOG.info('An error occured while writing the QTLs to the file %s' \
         % outputfile)
         LOG.debug("Error: %s" % err)
