@@ -6,6 +6,7 @@ build/
 dist/
 MANIFEST
 *.csv
+*.map
 *.egg-info
 _build/
 .coverage
