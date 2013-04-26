@@ -170,7 +170,8 @@ class MapQTLPlugin(PluginInterface):
                 if filename.startswith('Session ') \
                         and filename.endswith('.mqo'):
                     session = filename.split()[1]
-                    sessions.append(session)
+                    if session not in sessions:
+                        sessions.append(session)
         return sessions
 
     @classmethod
