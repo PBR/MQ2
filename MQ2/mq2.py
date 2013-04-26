@@ -200,6 +200,8 @@ def append_count_to_matrix(qtl_matrixfile, lod_threshold):
         reflective the presence of a QTL.
 
     """
+    if not os.path.exists(qtl_matrixfile):
+        raise MQ2Exception('File not found: "%s"' % qtl_matrixfile)
     matrix = read_input_file(qtl_matrixfile, sep=',')
     tmp = list(matrix[0])
     tmp.append('# QTLs')
