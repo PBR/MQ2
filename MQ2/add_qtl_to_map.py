@@ -51,7 +51,7 @@ def add_qtl_to_marker(marker, qtls):
     return marker
 
 
-def add_qtl_to_map(qtlfile, mapfile, outputfile='map_with_qtl.csv'):
+def add_qtl_to_map(qtlfile, mapfile, outputfile='map_with_qtls.csv'):
     """ This function adds to a genetic map for each marker the number
     of significant QTLs found.
 
