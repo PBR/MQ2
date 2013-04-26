@@ -125,6 +125,7 @@ class MapQTLPlugin(PluginInterface):
     """
 
     name = 'MapQTL plugin'
+    session_name = 'MapQTL session'
 
     @classmethod
     def is_applicable(cls):

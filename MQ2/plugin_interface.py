@@ -35,6 +35,7 @@ class PluginInterface(object):
     """
 
     name = 'plugin name'
+    session_name = 'The name of the session to be displayed on the form'
 
     @classmethod
     def is_applicable(cls):
