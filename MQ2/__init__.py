@@ -113,7 +113,7 @@ def get_matrix_dimensions(filename):
             stream.close()
 
 
-def read_input_file(filename, sep='\t'):
+def read_input_file(filename, sep='\t', noquote=False):
     """Reads a given inputfile (tab delimited) and returns a matrix
     (list of list).
     arg: filename, the complete path to the inputfile to read
@@ -123,7 +123,10 @@ def read_input_file(filename, sep='\t'):
     try:
         stream = open(filename, 'r')
         for row in stream:
-            output.append(row.strip().split(sep))
+            row = row.strip()
+            if noquote:
+                row = row.replace('"', '')
+            output.append(row.split(sep))
     except IOError, err:  # pragma: no cover
         LOG.info("Something wrong happend while reading the file %s "
                  % filename)
