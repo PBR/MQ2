@@ -102,17 +102,14 @@ def cli_main():
         LOG.setLevel(logging.INFO)
 
     args = get_arguments()
-    main(inputzip=args.inputzip,
-         inputdir=args.inputdir,
-         inputfile=args.inputfile,
-         lod_threshold=args.lod,
-         session=args.session
-         )
+    plugin, folder = get_plugin_and_folder(inputzip=args.inputzip,
+                                           inputdir=args.inputdir,
+                                           inputfile=args.inputfile)
+    run_mq2(plugin, folder, lod_threshold=args.lod,
+            session=args.session)
 
 
-def main(inputzip=None, inputdir=None, inputfile=None,
-         lod_threshold=None, session=None,
-         outputfolder=None):
+def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
     """ Main function. """
 
     if (inputzip and inputdir) \
@@ -142,10 +139,17 @@ def main(inputzip=None, inputdir=None, inputfile=None,
     # keep only the plugins that have the file(s) they need
     plugins = [plugin for plugin in plugins
                if plugin.get_files(tmp_folder)]
+
     if len(plugins) > 1:
         raise MQ2Exception('Your dataset contains valid input for '
                            'several plugins.')
     plugin = plugins[0]
+    return (plugin, tmp_folder)
+
+
+def run_mq2(plugin, folder,
+        lod_threshold=None, session=None, outputfolder=None):
+    """ Run the plugin. """
 
     qtls_file = 'qtls.csv'
     matrix_file = 'qtls_matrix.csv'
@@ -162,7 +166,7 @@ def main(inputzip=None, inputdir=None, inputfile=None,
         map_chart_file = '%s/%s' % (outputfolder, map_chart_file)
 
     # call the plugin to create the map and the matrix files
-    plugin.convert_inputfiles(tmp_folder, session=session,
+    plugin.convert_inputfiles(folder=folder, session=session,
                               lod_threshold=lod_threshold,
                               qtls_file=qtls_file,
                               matrix_file=matrix_file,
@@ -175,14 +179,14 @@ def main(inputzip=None, inputdir=None, inputfile=None,
     add_marker_to_qtls(qtls_file, map_file, outputfile=qtls_ml_file)
 
     # put the number of QTLs found on each marker of the map
-    add_qtl_to_map(qtls_file, map_file, outputfile=map_qtl_file)
+    add_qtl_to_map(qtls_ml_file, map_file, outputfile=map_qtl_file)
 
     # generate the mapchart file
     generate_map_chart_file(matrix_file, lod_threshold,
                             map_chart_file=map_chart_file)
 
-    if tmp_folder and os.path.exists(tmp_folder):
-        shutil.rmtree(tmp_folder)
+    if folder and os.path.exists(folder):
+        shutil.rmtree(folder)
     return 0
 
 
