@@ -143,6 +143,9 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
     if len(plugins) > 1:
         raise MQ2Exception('Your dataset contains valid input for '
                            'several plugins.')
+    if len(plugins) == 0:
+        raise MQ2Exception('Invalid dataset: your input cannot not be '
+                           'processed by any of the current plugins.')
     plugin = plugins[0]
     return (plugin, tmp_folder)
 
