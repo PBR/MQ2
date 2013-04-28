@@ -148,6 +148,7 @@ def write_matrix(outputfile, matrix):
         stream = open(outputfile, 'w')
         for row in matrix:
             if isinstance(row, list) or isinstance(row, tuple):
+                row = [str(el) for el in row]
                 stream.write(','.join(row) + '\n')
             else:
                 stream.write(row + '\n')
