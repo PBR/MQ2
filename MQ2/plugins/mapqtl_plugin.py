@@ -206,9 +206,11 @@ class MapQTLPlugin(PluginInterface):
 
         """
         if session is None:
+            sessions = cls.get_session_identifiers(folder)
             raise MQ2NoSessionException(
                 'The MapQTL plugin requires a session identifier to '
-                'identify the session to process')
+                'identify the session to process.'
+                'Sessions are: %s' % ','.join(sessions))
         inputfiles = []
         for filename in cls.get_files(folder):
             basefile = os.path.basename(filename)
