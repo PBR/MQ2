@@ -68,11 +68,16 @@ The first row of the document contains the headers
 (Markers, Linkage Group, position, Trait name1, Trait name2, etc).
 
 
-The screenshot below presents how the data should be formated
+The screenshot below presents how the data should be formated:
 
-.. image:: _static/data_format.png
+
+.. figure:: _static/data_format.png
    :width: 600 px
    :target: _static/data_format.png
+   :align: center
+
+   Structure the CSV file and Excel documents should have to be processed
+   by MQ².
 
 
 The CSV or Excel document should be compressed into a .zip archive to be
