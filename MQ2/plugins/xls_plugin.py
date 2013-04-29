@@ -268,7 +268,6 @@ class XslPlugin(PluginInterface):
 
         inputfile = inputfiles[0]
 
-
         # QTL matrix and QTL files
         qtls = []
         matrix = read_excel_file(inputfile, sheet_name=session)
@@ -282,4 +281,3 @@ class XslPlugin(PluginInterface):
         # Map matrix
         map_matrix = get_map_matrix(inputfile, session)
         write_matrix(map_file, map_matrix)
-

@@ -198,7 +198,6 @@ class CSVPlugin(PluginInterface):
 
         inputfile = inputfiles[0]
 
-
         # QTL matrix and QTL files
         qtls = []
         matrix = read_input_file(inputfile, sep=',', noquote=True)
@@ -212,4 +211,3 @@ class CSVPlugin(PluginInterface):
         # Map matrix
         map_matrix = get_map_matrix(inputfile)
         write_matrix(map_file, map_matrix)
-

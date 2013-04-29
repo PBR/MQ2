@@ -150,8 +150,8 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
     return (plugin, tmp_folder)
 
 
-def run_mq2(plugin, folder,
-        lod_threshold=None, session=None, outputfolder=None):
+def run_mq2(plugin, folder, lod_threshold=None, session=None,
+            outputfolder=None):
     """ Run the plugin. """
 
     qtls_file = 'qtls.csv'
