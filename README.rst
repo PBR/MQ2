@@ -4,8 +4,9 @@ MQ²
 :Author: Pierre-Yves Chibon <pierre-yves.chibon@wur.nl>, <pingou@pingoured.fr>
 
 
-A simple python module to process output from QTL mapping tool including MapQTL
-and R/qtl.
+A simple python module to process output from QTL mapping tool including
+`MapQTL <http://www.kyazma.nl/index.php/mc.MapQTL>`_ and
+`R/qtl <http://www.rqtl.org/>`_.
 
 Assuming one QTL per linkage group and using the LOD threshold set by the user.
 This application extracts all the QTLs detected by the QTL mapping tool, it
