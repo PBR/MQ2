@@ -166,7 +166,7 @@ class MapQTLPlugin(PluginInterface):
         return filelist
 
     @classmethod
-    def get_session_identifiers(cls, folder, inputfile):
+    def get_session_identifiers(cls, folder=None, inputfile=None):
         """ Retrieve the list of session identifiers contained in the
         data on the folder.
 
