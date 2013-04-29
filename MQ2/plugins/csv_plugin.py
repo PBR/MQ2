@@ -215,7 +215,7 @@ class CSVPlugin(PluginInterface):
                                    'a folder')
             else:
                 inputfiles = [inputfile]
-    
+
         if len(inputfiles) == 0:
             raise MQ2Exception('No files correspond to this plugin')
 
