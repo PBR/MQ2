@@ -4,8 +4,15 @@ Install
 Dependencies
 ~~~~~~~~~~~~
 
-MQ² requires `python 2 <http://www.python.org/download/>`_ (version 2.5 and
-above) and is not compatible with Python 3.
+MQ² requires `python 2 <http://www.python.org/download/>`_ (version 2.6 and
+above) and is compatible with Python 3.
+
+
+In addition to python MQ² has the following dependencies:
+
+- `straight.plugin <https://pypi.python.org/pypi/straight.plugin/>`_
+- `xlrd <https://pypi.python.org/pypi/xlrd>`_ (only required by the Excel
+  plugin, if not present only this plugin will be affected)
 
 
 Install methods
@@ -23,6 +30,8 @@ latest MQ² release by running:
 ::
 
   easy_install MQ2
+
+.. note:: This is the recommanded method for users running Windows.
 
 
 Install from sources
@@ -63,7 +72,7 @@ Then you can either
 
   ::
 
-    python MQ2 --help
+    python MQ2/mq2.py --help
 
 - install MQ² on your system via the command
 

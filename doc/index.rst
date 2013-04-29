@@ -6,13 +6,15 @@
 Welcome to MQ²'s documentation!
 ===============================
 
-MQ² is a python module and program to analyse output from MapQTL analysis.
+A simple python module to process output from QTL mapping tool including
+`MapQTL <http://www.kyazma.nl/index.php/mc.MapQTL>`_ and
+`R/qtl <http://www.rqtl.org/>`_.
 
 
 Assuming one QTL per linkage group and using the LOD threshold set by the user.
-This application extracts all the QTLs detected by MapQTL, using the JoinMap
-map file, it finds the closest marker and finally put the number of QTLs found
-for each marker on the map.
+This application extracts all the QTLs detected by the QTL mapping tool, it
+finds the closest marker and finally put the number of QTLs found for each
+marker on the genetic map.
 
 
 This approach quickly allows you to find potential QTL hotspot in your
@@ -31,7 +33,8 @@ Documentation:
    :maxdepth: 2
 
    install
+   data
    usage
    output
    contribute
-
+   plugin
