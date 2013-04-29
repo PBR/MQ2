@@ -126,7 +126,7 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
         tmp_folder = set_tmp_folder()
         extract_zip(inputzip, tmp_folder)
     elif inputfile:
-        tmp_folder = os.path.dirname(inputfile)
+        tmp_folder = inputfile
     else:
         tmp_folder = inputdir
 
@@ -137,8 +137,12 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
     plugins = [plugin for plugin in plugins if plugin.is_applicable()]
 
     # keep only the plugins that have the file(s) they need
-    plugins = [plugin for plugin in plugins
-               if plugin.get_files(tmp_folder)]
+    if inputfile:
+        plugins = [plugin for plugin in plugins
+                   if plugin.valid_file(tmp_folder)]
+    else:
+        plugins = [plugin for plugin in plugins
+                   if plugin.get_files(tmp_folder)]
 
     if len(plugins) > 1:
         raise MQ2Exception('Your dataset contains valid input for '
@@ -169,11 +173,18 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
         map_chart_file = '%s/%s' % (outputfolder, map_chart_file)
 
     # call the plugin to create the map and the matrix files
-    plugin.convert_inputfiles(folder=folder, session=session,
-                              lod_threshold=lod_threshold,
-                              qtls_file=qtls_file,
-                              matrix_file=matrix_file,
-                              map_file=map_file)
+    if os.path.isdir(folder):
+        plugin.convert_inputfiles(folder=folder, session=session,
+                                  lod_threshold=lod_threshold,
+                                  qtls_file=qtls_file,
+                                  matrix_file=matrix_file,
+                                  map_file=map_file)
+    else:
+        plugin.convert_inputfiles(inputfile=folder, session=session,
+                                  lod_threshold=lod_threshold,
+                                  qtls_file=qtls_file,
+                                  matrix_file=matrix_file,
+                                  map_file=map_file)
 
     # Add the number of QTLs found on the matrix
     append_count_to_matrix(matrix_file, lod_threshold)
@@ -188,7 +199,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
     generate_map_chart_file(matrix_file, lod_threshold,
                             map_chart_file=map_chart_file)
 
-    if folder and os.path.exists(folder):
+    if folder and os.path.isdir(folder) and os.path.exists(folder):
         shutil.rmtree(folder)
     return 0
 
