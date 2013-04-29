@@ -4,12 +4,13 @@ MQ²
 :Author: Pierre-Yves Chibon <pierre-yves.chibon@wur.nl>, <pingou@pingoured.fr>
 
 
-A simple python module to process output from MapQTL analysis.
+A simple python module to process output from QTL mapping tool including MapQTL
+and R/qtl.
 
 Assuming one QTL per linkage group and using the LOD threshold set by the user.
-This application extracts all the QTLs detected by MapQTL, using the JoinMap
-map file, it finds the closest marker and finally put the number of QTLs found
-for each marker on the map.
+This application extracts all the QTLs detected by the QTL mapping tool, it
+finds the closest marker and finally put the number of QTLs found for each
+marker on the genetic map.
 
 This approach quickly allows you to find potential QTL hotspot in your
 dataset. This is particularly usefull for large QTL analysis on a
@@ -19,9 +20,9 @@ Get this project:
 -----------------
 Sources:  https://github.com/PBR/MQ2
 
-Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-0.2.0.tar.gz
+Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-1.0.0.tar.gz
 
-Run it on the web at: http://www.plantbreeding.wur.nl/mq2
+Run it on the web at: http://www.plantbreeding.nl/mq2
 
 
 Documentation:
@@ -32,6 +33,7 @@ to this project.
 
 The documentation can be found:
 - online at: https://github.com/PBR/MQ2/tree/master/doc
+- as pdf at: https://github.com/PBR/MQ2/tree/master/
 
 
 Run the project:
