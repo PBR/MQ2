@@ -137,6 +137,16 @@ class MapQTLPlugin(PluginInterface):
         return True
 
     @classmethod
+    def valid_file(cls, filename):
+        """ Check if the provided file is a valid file for this plugin.
+
+        :arg filename: the path to the file to check.
+
+        """
+        return filename.startswith('Session ') \
+            and filename.endswith('.mqo')
+
+    @classmethod
     def get_files(cls, folder):
         """ Retrieve the list of files the plugin can work on.
         Find this list based on the files name, files extension or even
@@ -156,12 +166,13 @@ class MapQTLPlugin(PluginInterface):
         return filelist
 
     @classmethod
-    def get_session_identifiers(cls, folder):
+    def get_session_identifiers(cls, folder, inputfile):
         """ Retrieve the list of session identifiers contained in the
         data on the folder.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
 
         """
         sessions = []
@@ -175,11 +186,16 @@ class MapQTLPlugin(PluginInterface):
         return sessions
 
     @classmethod
-    def convert_inputfiles(cls, folder, session=None, lod_threshold=None,
+    def convert_inputfiles(cls,
+                           folder=None,
+                           inputfile=None,
+                           session=None,
+                           lod_threshold=None,
                            qtls_file='qtls.csv',
                            matrix_file='qtls_matrix.csv',
                            map_file='map.csv'):
-        """ Convert the input files present in the given folder.
+        """ Convert the input files present in the given folder or
+        inputfile.
         This method creates the matrix representation of the QTLs
         results providing for each marker position the LOD value found
         for each trait as well as a representation of the genetic map
@@ -187,8 +203,9 @@ class MapQTLPlugin(PluginInterface):
         The genetic map should be cleared of any markers added by the
         QTL mapping software.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
         :kwarg session: the session identifier used to identify which
             session to process
         :kwarg lod_threshold: the LOD threshold to apply to determine if
@@ -205,18 +222,31 @@ class MapQTLPlugin(PluginInterface):
                marker, linkage group, position
 
         """
+        if folder is None and inputfile is None:
+            raise MQ2Exception('You must specify either a folder or an '
+                               'input file')
+
+        if folder is not None:
+            if not os.path.isdir(folder):
+                raise MQ2Exception('The specified folder is actually '
+                                   'not a folder')
+            else:
+                inputfiles = cls.get_files(folder)
+
+        if inputfile is not None:
+            if os.path.isdir(inputfile):
+                raise MQ2Exception('The specified input file is actually '
+                                   'a folder')
+            else:
+                inputfiles = [inputfile]
+
         if session is None:
             sessions = cls.get_session_identifiers(folder)
             raise MQ2NoSessionException(
                 'The MapQTL plugin requires a session identifier to '
                 'identify the session to process.'
                 'Sessions are: %s' % ','.join(sessions))
-        inputfiles = []
-        for filename in cls.get_files(folder):
-            basefile = os.path.basename(filename)
-            if basefile.startswith('Session %s' % session) \
-                    and basefile.endswith('.mqo'):
-                inputfiles.append(filename)
+
         if len(inputfiles) == 0:
             raise MQ2NoSessionException('No files correspond to this session')
 

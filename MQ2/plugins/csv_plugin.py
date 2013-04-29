@@ -134,6 +134,15 @@ class CSVPlugin(PluginInterface):
         return True
 
     @classmethod
+    def valid_file(cls, filename):
+        """ Check if the provided file is a valid file for this plugin.
+
+        :arg filename: the path to the file to check.
+
+        """
+        return is_csv_file(filename)
+
+    @classmethod
     def get_files(cls, folder):
         """ Retrieve the list of files the plugin can work on.
         Find this list based on the files name, files extension or even
@@ -153,11 +162,16 @@ class CSVPlugin(PluginInterface):
         return filelist
 
     @classmethod
-    def convert_inputfiles(cls, folder, session=None, lod_threshold=None,
+    def convert_inputfiles(cls,
+                           folder=None,
+                           inputfile=None,
+                           session=None,
+                           lod_threshold=None,
                            qtls_file='qtls.csv',
                            matrix_file='qtls_matrix.csv',
                            map_file='map.csv'):
-        """ Convert the input files present in the given folder.
+        """ Convert the input files present in the given folder or
+        inputfile.
         This method creates the matrix representation of the QTLs
         results providing for each marker position the LOD value found
         for each trait as well as a representation of the genetic map
@@ -165,8 +179,9 @@ class CSVPlugin(PluginInterface):
         The genetic map should be cleared of any markers added by the
         QTL mapping software.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
         :kwarg session: the session identifier used to identify which
             session to process
         :kwarg lod_threshold: the LOD threshold to apply to determine if
@@ -183,7 +198,24 @@ class CSVPlugin(PluginInterface):
                marker, linkage group, position
 
         """
-        inputfiles = cls.get_files(folder)
+        if folder is None and inputfile is None:
+            raise MQ2Exception('You must specify either a folder or an '
+                               'input file')
+
+        if folder is not None:
+            if not os.path.isdir(folder):
+                raise MQ2Exception('The specified folder is actually '
+                                   'not a folder')
+            else:
+                inputfiles = cls.get_files(folder)
+
+        if inputfile is not None:
+            if os.path.isdir(inputfile):
+                raise MQ2Exception('The specified input file is actually '
+                                   'a folder')
+            else:
+                inputfiles = [inputfile]
+    
         if len(inputfiles) == 0:
             raise MQ2Exception('No files correspond to this plugin')
 

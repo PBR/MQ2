@@ -172,6 +172,16 @@ class XslPlugin(PluginInterface):
         return _VALID
 
     @classmethod
+    def valid_file(cls, filename):
+        """ Check if the provided file is a valid file for this plugin.
+
+        :arg filename: the path to the file to check.
+
+        """
+        file_ex = os.path.splitext(filename)[1].replace('.', '', 1)
+        return file_ex in SUPPORTED_FILES and is_excel_file(filename)
+
+    @classmethod
     def get_files(cls, folder):
         """ Retrieve the list of files the plugin can work on.
         Find this list based on the files name, files extension or even
@@ -191,33 +201,47 @@ class XslPlugin(PluginInterface):
         return filelist
 
     @classmethod
-    def get_session_identifiers(cls, folder):
+    def get_session_identifiers(cls, folder, inputfile):
         """ Retrieve the list of session identifiers contained in the
-        data on the folder.
+        data on the folder or the inputfile.
         For this plugin, it returns the list of excel sheet available.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
 
         """
         sessions = []
-        for root, dirs, files in os.walk(folder):
-            for filename in files:
-                filename = os.path.join(root, filename)
-                for ext in SUPPORTED_FILES:
-                    if filename.endswith(ext):
-                        wbook = xlrd.open_workbook(filename)
-                        for sheet in wbook.sheets():
-                            if sheet.name not in sessions:
-                                sessions.append(sheet.name)
+        if folder:
+            for root, dirs, files in os.walk(folder):
+                for filename in files:
+                    filename = os.path.join(root, filename)
+                    for ext in SUPPORTED_FILES:
+                        if filename.endswith(ext):
+                            wbook = xlrd.open_workbook(filename)
+                            for sheet in wbook.sheets():
+                                if sheet.name not in sessions:
+                                    sessions.append(sheet.name)
+        else:
+            for ext in SUPPORTED_FILES:
+                if inputfile.endswith(ext):
+                    wbook = xlrd.open_workbook(inputfile)
+                    for sheet in wbook.sheets():
+                        if sheet.name not in sessions:
+                            sessions.append(sheet.name)
         return sessions
 
     @classmethod
-    def convert_inputfiles(cls, folder, session=None, lod_threshold=None,
+    def convert_inputfiles(cls,
+                           folder=None,
+                           inputfile=None,
+                           session=None,
+                           lod_threshold=None,
                            qtls_file='qtls.csv',
                            matrix_file='qtls_matrix.csv',
                            map_file='map.csv'):
-        """ Convert the input files present in the given folder.
+        """ Convert the input files present in the given folder or
+        inputfile.
         This method creates the matrix representation of the QTLs
         results providing for each marker position the LOD value found
         for each trait as well as a representation of the genetic map
@@ -225,12 +249,11 @@ class XslPlugin(PluginInterface):
         The genetic map should be cleared of any markers added by the
         QTL mapping software.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
         :kwarg session: the session identifier used to identify which
-            session to process.
-            For this plugin the session identifier refers to the sheet
-            name of the workbook.
+            session to process
         :kwarg lod_threshold: the LOD threshold to apply to determine if
             a QTL is significant or not
         :kwarg qtls_file: a csv file containing the list of all the
@@ -245,10 +268,27 @@ class XslPlugin(PluginInterface):
                marker, linkage group, position
 
         """
-        inputfiles = cls.get_files(folder)
+        if folder is None and inputfile is None:
+            raise MQ2Exception('You must specify either a folder or an '
+                               'input file')
+
+        if folder is not None:
+            if not os.path.isdir(folder):
+                raise MQ2Exception('The specified folder is actually '
+                                   'not a folder')
+            else:
+                inputfiles = cls.get_files(folder)
+
+        if inputfile is not None:
+            if os.path.isdir(inputfile):
+                raise MQ2Exception('The specified input file is actually '
+                                   'a folder')
+            else:
+                inputfiles = [inputfile]
 
         if session is None:
-            sessions = cls.get_session_identifiers(folder)
+            sessions = cls.get_session_identifiers(folder=folder,
+                                                   inputfile=inputfile)
             raise MQ2NoSessionException(
                 'The Excel plugin requires a sheet identifier to '
                 'identify the sheet of the workbook to process. '

@@ -60,22 +60,37 @@ class PluginInterface(object):
         pass
 
     @classmethod
-    def get_session_identifiers(cls, folder):
-        """ Retrieve the list of session identifiers contained in the
-        data on the folder.
+    def valid_file(cls, filename):
+        """ Check if the provided file is a valid file for this plugin.
 
-        :arg folder: the path to the folder containing the files to
-            check. This folder may contain sub-folders.
+        :arg filename: the path to the file to check.
 
         """
         pass
 
     @classmethod
-    def convert_inputfiles(cls, folder, session=None, lod_threshold=None,
+    def get_session_identifiers(cls, folder, inputfile):
+        """ Retrieve the list of session identifiers contained in the
+        data on the folder or the inputfile.
+
+        :kwarg folder: the path to the folder containing the files to
+            check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
+
+        """
+        pass
+
+    @classmethod
+    def convert_inputfiles(cls,
+                           folder=None,
+                           inputfile=None,
+                           session=None,
+                           lod_threshold=None,
                            qtls_file='qtls.csv',
                            matrix_file='qtls_matrix.csv',
                            map_file='map.csv'):
-        """ Convert the input files present in the given folder.
+        """ Convert the input files present in the given folder or
+        inputfile.
         This method creates the matrix representation of the QTLs
         results providing for each marker position the LOD value found
         for each trait as well as a representation of the genetic map
@@ -83,8 +98,9 @@ class PluginInterface(object):
         The genetic map should be cleared of any markers added by the
         QTL mapping software.
 
-        :arg folder: the path to the folder containing the files to
+        :kwarg folder: the path to the folder containing the files to
             check. This folder may contain sub-folders.
+        :kwarg inputfile: the path to the input file to use
         :kwarg session: the session identifier used to identify which
             session to process
         :kwarg lod_threshold: the LOD threshold to apply to determine if
