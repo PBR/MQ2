@@ -1,3 +1,4 @@
 include COPYING README.rst MQ2.spec
+include MQ2_doc.pdf
 include test/*
 include doc/*
