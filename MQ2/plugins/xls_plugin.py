@@ -33,13 +33,13 @@ import re
 # Check if import works
 _VALID = False
 SUPPORTED_FILES = []
-try:
+try:  # pragma: no cover
     import xlrd
     _VALID = True
     SUPPORTED_FILES = ['xls']
     if xlrd.__VERSION__ >= '0.8.0':
         SUPPORTED_FILES.append('xlsx')
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 
 
@@ -84,7 +84,7 @@ def read_excel_file(inputfile, sheet_name):
                 for col in range(sheet.ncols):
                     values.append(sheet.cell(row, col).value)
                 output.append(values)
-    if not found:
+    if not found:  # pragma: no cover
         raise MQ2Exception('Invalid session identifier provided')
     return output
 
@@ -192,6 +192,8 @@ class XslPlugin(PluginInterface):
 
         """
         filelist = []
+        if folder is None or not os.path.isdir(folder):
+            return filelist
         for root, dirs, files in os.walk(folder):
             for filename in files:
                 for ext in SUPPORTED_FILES:
@@ -212,7 +214,10 @@ class XslPlugin(PluginInterface):
 
         """
         sessions = []
+        
         if folder:
+            if not os.path.isdir(folder):
+                return sessions
             for root, dirs, files in os.walk(folder):
                 for filename in files:
                     filename = os.path.join(root, filename)
@@ -222,7 +227,9 @@ class XslPlugin(PluginInterface):
                             for sheet in wbook.sheets():
                                 if sheet.name not in sessions:
                                     sessions.append(sheet.name)
-        else:
+        elif inputfile:
+            if os.path.isdir(inputfile):
+                return sessions
             for ext in SUPPORTED_FILES:
                 if inputfile.endswith(ext):
                     wbook = xlrd.open_workbook(inputfile)
@@ -272,32 +279,35 @@ class XslPlugin(PluginInterface):
             raise MQ2Exception('You must specify either a folder or an '
                                'input file')
 
-        if folder is not None:
+        if folder is not None:  # pragma: no cover
             if not os.path.isdir(folder):
                 raise MQ2Exception('The specified folder is actually '
                                    'not a folder')
             else:
                 inputfiles = cls.get_files(folder)
 
-        if inputfile is not None:
+        if inputfile is not None:  # pragma: no cover
             if os.path.isdir(inputfile):
                 raise MQ2Exception('The specified input file is actually '
                                    'a folder')
             else:
                 inputfiles = [inputfile]
 
+        sessions = cls.get_session_identifiers(
+            folder=folder, inputfile=inputfile)
+
         if session is None:
-            sessions = cls.get_session_identifiers(folder=folder,
-                                                   inputfile=inputfile)
             raise MQ2NoSessionException(
                 'The Excel plugin requires a sheet identifier to '
                 'identify the sheet of the workbook to process. '
                 'Sheets are: %s' % ','.join(sessions))
+        elif str(session) not in sessions:
+            raise MQ2NoSuchSessionException(
+                'The Excel sheet provided (%s) could not be found in the '
+                'workbook. '
+                'Sheets are: %s' % (session, ','.join(sessions)))
 
-        if len(inputfiles) == 0:
-            raise MQ2Exception('No files correspond to this plugin')
-
-        if len(inputfiles) > 1:
+        if len(inputfiles) > 1:  # pragma: no cover
             raise MQ2Exception(
                 'This plugin can only process one file at a time')
 
