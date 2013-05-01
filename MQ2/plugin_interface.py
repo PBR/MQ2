@@ -28,7 +28,7 @@ MQ2 plugin interface
 """
 
 
-class PluginInterface(object):
+class PluginInterface(object):  # pragma: no cover
     """ The interface that each plugin should extends to support their
     file format and tool.
 
