@@ -34,7 +34,7 @@ to this project.
 
 The documentation can be found:
 - online at: https://github.com/PBR/MQ2/tree/master/doc
-- as pdf at: https://github.com/PBR/MQ2/tree/master/
+- as pdf at: https://github.com/PBR/MQ2/tree/master/MQ2_doc.pdf?raw=true
 
 
 Run the project:
@@ -53,18 +53,14 @@ behaves as it should.
 
 To run them, two ways, either::
 
- nosetests
+ ./runtest.sh
 
-from the ``MQ2`` folder, or::
+or::
 
- python test.py
+ python setup.py nosetest
 
-within the ``test`` folder
-
-.. note:: if you have ``python-coverage`` installed you can also run the tests
-         as follows to get coverage information::
-
-           nosetests --with-coverage
+.. note:: You will need to have ``python-coverage`` installed to run the test
+          via ``runtest.sh``
 
 License:
 --------
