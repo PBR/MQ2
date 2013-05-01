@@ -10,3 +10,4 @@ MANIFEST
 *.egg-info
 _build/
 .coverage
+*~
