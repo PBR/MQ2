@@ -53,7 +53,7 @@ class QTL(object):
             self.trait, self.start_position, self.peak_start_position,
             self.peak_stop_position, self.stop_position)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         """ String representation of the QTL object. """
         return 'QTL<trait: %s, start:%s, peak:%s - %s, stop:%s>' % (
             self.trait,
