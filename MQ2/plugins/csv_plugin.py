@@ -48,10 +48,10 @@ def is_csv_file(inputfile):
         stream = open(inputfile)
         row = stream.readline()
         stream.close()
-    except IOError:
+    except IOError:  # pragma: no cover
         return False
     content = row.strip().split(',')
-    return len(content) >= 4
+    return inputfile.endswith('.csv') and len(content) >= 4
 
 
 def get_qtls_from_rqtl_data(matrix, lod_threshold):
@@ -153,12 +153,13 @@ class CSVPlugin(PluginInterface):
 
         """
         filelist = []
+        if folder is None or not os.path.isdir(folder):
+            return filelist
         for root, dirs, files in os.walk(folder):
             for filename in files:
-                if filename.endswith('.csv'):
-                    filename = os.path.join(root, filename)
-                    if is_csv_file(filename):
-                        filelist.append(filename)
+                filename = os.path.join(root, filename)
+                if is_csv_file(filename):
+                    filelist.append(filename)
         return filelist
 
     @classmethod
@@ -202,24 +203,24 @@ class CSVPlugin(PluginInterface):
             raise MQ2Exception('You must specify either a folder or an '
                                'input file')
 
-        if folder is not None:
+        if folder is not None:  # pragma: no cover
             if not os.path.isdir(folder):
                 raise MQ2Exception('The specified folder is actually '
                                    'not a folder')
             else:
                 inputfiles = cls.get_files(folder)
 
-        if inputfile is not None:
+        if inputfile is not None:  # pragma: no cover
             if os.path.isdir(inputfile):
                 raise MQ2Exception('The specified input file is actually '
                                    'a folder')
             else:
                 inputfiles = [inputfile]
 
-        if len(inputfiles) == 0:
+        if len(inputfiles) == 0:  # pragma: no cover
             raise MQ2Exception('No files correspond to this plugin')
 
-        if len(inputfiles) > 1:
+        if len(inputfiles) > 1:  # pragma: no cover
             raise MQ2Exception(
                 'This plugin can only process one file at a time')
 
