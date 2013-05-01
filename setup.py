@@ -6,7 +6,7 @@ Setup script
 """
 
 from setuptools import setup
-from src import __version__
+from MQ2 import __version__
 
 setup(
     name='MQ2',
@@ -16,10 +16,14 @@ setup(
     version=__version__,
     license='GPLv3+',
     url='https://github.com/PBR/MQ2/',
-    package_dir={'MQ2': 'src'},
-    packages=['MQ2'],
-    scripts=["MQ2"],
-    test_suite = "test.test.MQ2tests",
+    packages=['MQ2', 'MQ2.plugins'],
+    install_requires=['straight.plugin', 'xlrd'],
+    test_suite='nose.collector',
+    entry_points={
+        'console_scripts': [
+            'MQ2 = MQ2.mq2:cli_main'
+		]
+    },
     classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Console',
@@ -28,9 +32,9 @@ setup(
           'Operating System :: MacOS :: MacOS X',
           'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
-          'Programming Language :: Python :: 2.5',
           'Programming Language :: Python :: 2.6',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
           'Topic :: Software Development :: Libraries',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
           ],
