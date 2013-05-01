@@ -11,3 +11,4 @@ MANIFEST
 _build/
 .coverage
 *~
+*.swp
