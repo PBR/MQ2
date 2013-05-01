@@ -12,3 +12,4 @@ _build/
 .coverage
 *~
 *.swp
+*.egg
