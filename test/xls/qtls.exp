@@ -1,0 +1,20 @@
+Trait,Linkage Group,Position,Exact marker
+pheno2,5.0,7.5,c5.loc7.5
+pheno2,5.0,9.8,D5M394
+pheno2,5.0,10.0,c5.loc10
+pheno2,5.0,10.9,D5M197
+pheno2,5.0,12.5,c5.loc12.5
+age,10.0,25.0,c10.loc25
+age,10.0,27.5,c10.loc27.5
+age,10.0,30.0,c10.loc30
+age,10.0,32.5,c10.loc32.5
+age,10.0,35.0,c10.loc35
+age,10.0,37.5,c10.loc37.5
+age,10.0,40.0,c10.loc40
+age,10.0,42.5,c10.loc42.5
+age,10.0,45.0,c10.loc45
+age,10.0,47.5,c10.loc47.5
+age,10.0,49.2,D10M68
+age,10.0,50.0,c10.loc50
+age,10.0,52.5,c10.loc52.5
+age,10.0,55.0,c10.loc55

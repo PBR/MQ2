@@ -1,0 +1,20 @@
+Trait,Linkage Group,Position,Exact marker,Closest marker
+pheno2,5,7.5,c5.loc7.5,D5M394
+pheno2,5,9.8,D5M394,D5M394
+pheno2,5,10,c5.loc10,D5M394
+pheno2,5,10.9,D5M197,D5M197
+pheno2,5,12.5,c5.loc12.5,D5M197
+age,10,25,c10.loc25,D10M44
+age,10,27.5,c10.loc27.5,D10M44
+age,10,30,c10.loc30,D10M44
+age,10,32.5,c10.loc32.5,D10M44
+age,10,35,c10.loc35,D10M68
+age,10,37.5,c10.loc37.5,D10M68
+age,10,40,c10.loc40,D10M68
+age,10,42.5,c10.loc42.5,D10M68
+age,10,45,c10.loc45,D10M68
+age,10,47.5,c10.loc47.5,D10M68
+age,10,49.2,D10M68,D10M68
+age,10,50,c10.loc50,D10M68
+age,10,52.5,c10.loc52.5,D10M68
+age,10,55,c10.loc55,D10M68
