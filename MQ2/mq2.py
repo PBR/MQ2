@@ -107,6 +107,7 @@ def cli_main():  # pragma: no cover
             inputzip=args.inputzip,
             inputdir=args.inputdir,
             inputfile=args.inputfile)
+        LOG.debug('Plugin: %s -- Folder: %s' %(plugin.name, folder))
         run_mq2(
             plugin, folder, lod_threshold=args.lod, session=args.session)
     except MQ2Exception, err:
@@ -138,9 +139,11 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
 
     # retrieve the plugins
     plugins = load('MQ2.plugins', subclasses=PluginInterface)
+    LOG.debug('Plugin loaded: %s' % [plugin.name for plugin in plugins])
 
     # keep only the plugins that will work
     plugins = [plugin for plugin in plugins if plugin.is_applicable()]
+    LOG.debug('Plugin applicable: %s' % [plugin.name for plugin in plugins])
 
     # keep only the plugins that have the file(s) they need
     if inputfile:
@@ -149,6 +152,9 @@ def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
     else:
         plugins = [plugin for plugin in plugins
                    if plugin.get_files(tmp_folder)]
+
+    LOG.debug('Plugin w/ valid input: %s' %
+              [plugin.name for plugin in plugins])
 
     if len(plugins) > 1:
         raise MQ2Exception('Your dataset contains valid input for '
@@ -178,7 +184,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
         map_qtl_file = '%s/%s' % (outputfolder, map_qtl_file)
         map_chart_file = '%s/%s' % (outputfolder, map_chart_file)
 
-    # call the plugin to create the map and the matrix files
+    LOG.debug('Call the plugin to create the map, qtls and matrix files')
     if folder and os.path.isdir(folder):
         plugin.convert_inputfiles(folder=folder, session=session,
                                   lod_threshold=lod_threshold,
@@ -192,16 +198,16 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
                                   matrix_file=matrix_file,
                                   map_file=map_file)
 
-    # Add the number of QTLs found on the matrix
+    LOG.debug('Add the number of QTLs found on the matrix')
     _append_count_to_matrix(matrix_file, lod_threshold)
 
-    # append the closest marker to the peak
+    LOG.debug('Append the closest marker to the peak')
     add_marker_to_qtls(qtls_file, map_file, outputfile=qtls_ml_file)
 
-    # put the number of QTLs found on each marker of the map
+    LOG.debug('Put the number of QTLs found on each marker of the map')
     add_qtl_to_map(qtls_ml_file, map_file, outputfile=map_qtl_file)
 
-    # generate the mapchart file
+    LOG.debug('Generate the mapchart file')
     generate_map_chart_file(matrix_file, lod_threshold,
                             map_chart_file=map_chart_file)
 
