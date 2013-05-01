@@ -30,10 +30,7 @@ MQ2 CSV plugin
 import os
 import re
 
-from MQ2 import (MQ2Exception, MQ2NoSessionException,
-                 MQ2NoSuchSessionException,
-                 read_input_file, write_matrix)
-from MQ2.qtl import QTL
+from MQ2 import MQ2Exception, read_input_file, write_matrix
 from MQ2.plugin_interface import PluginInterface
 
 
@@ -64,7 +61,6 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
         reflective the presence of a QTL.
 
     """
-    headers = matrix[0]
     t_matrix = zip(*matrix)
     qtls = [['Trait', 'Linkage Group', 'Position', 'Exact marker']]
     # row 0: markers
@@ -94,7 +90,6 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
                            t_matrix[0][peak],  # marker
                            ]
                     qtls.append(qtl)
-                lg_group = t_matrix[1][cnt]
                 max_lod = row[cnt]
                 peak = cnt
             cnt = cnt + 1
@@ -111,7 +106,7 @@ def get_map_matrix(inputfile):
     matrix = read_input_file(inputfile, sep=',', noquote=True)
     output = [['Locus', 'Group', 'Position']]
     for row in matrix:
-        if row[0] and not re.match('c\d+\.loc[\d\.]+', row[0]):
+        if row[0] and not re.match(r'c\d+\.loc[\d\.]+', row[0]):
             output.append([row[0], row[1], row[2]])
     return output
 
