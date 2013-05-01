@@ -57,8 +57,8 @@ def is_excel_file(inputfile):
     """
     try:
         xlrd.open_workbook(inputfile)
-    except Exception, err:
-        print err
+    except Exception as err:
+        print(err)
         return False
     return True
 
@@ -97,7 +97,7 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
         reflective the presence of a QTL.
 
     """
-    t_matrix = zip(*matrix)
+    t_matrix = list(zip(*matrix))
     qtls = [['Trait', 'Linkage Group', 'Position', 'Exact marker']]
     # row 0: markers
     # row 1: chr

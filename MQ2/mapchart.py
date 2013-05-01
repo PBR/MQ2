@@ -95,7 +95,7 @@ def _order_linkage_group(group):
         else:
             tmp[float(row[1])] = [row[0]]
 
-    keys = tmp.keys()
+    keys = list(tmp.keys())
     keys.sort()
     output = []
     for key in keys:
@@ -165,7 +165,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
 
     try:
         stream = open(map_chart_file, 'w')
-        keys = tmp_dic.keys()
+        keys = list(tmp_dic.keys())
         ## Remove unknown group, reason:
         # The unlinked markers, if present, are always put in group U by
         # MapQTL. If you don't omit them and there are many (often), then
@@ -196,7 +196,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
                         stream.write('%s \n' % qtl.to_string())
                 stream.write('\n')
                 stream.write('\n')
-    except IOError, err:  # pragma: no cover
+    except IOError as err:  # pragma: no cover
         LOG.info('An error occured while writing the map chart map '
                  'to the file %s' % map_chart_file)
         LOG.debug("Error: %s" % err)

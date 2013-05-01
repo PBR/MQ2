@@ -193,7 +193,6 @@ class MQ2MapQTLtests(unittest.TestCase):
         plugin, folder = mq2.get_plugin_and_folder(
             inputzip=TEST_INPUT_PASSED)
         self.assertFalse(plugin.valid_file(TEST_INPUT_PASSED))
-        print os.path.join(folder, os.listdir(folder)[0]), '**'
         self.assertTrue(plugin.valid_file(
             os.path.join(folder, os.listdir(folder)[0])))
 

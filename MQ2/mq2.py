@@ -33,7 +33,6 @@ import logging
 import os
 import shutil
 import sys
-import tempfile
 
 from straight.plugin import load
 
@@ -109,8 +108,8 @@ def cli_main():  # pragma: no cover
         LOG.debug('Plugin: %s -- Folder: %s' % (plugin.name, folder))
         run_mq2(
             plugin, folder, lod_threshold=args.lod, session=args.session)
-    except MQ2Exception, err:
-        print err
+    except MQ2Exception as err:
+        print(err)
         return 1
     return 0
 

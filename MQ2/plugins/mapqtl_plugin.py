@@ -50,7 +50,7 @@ def get_qtls_matrix(qtl_matrix, matrix, inputfile):
 
     """
     trait_name = inputfile.split(')_', 1)[1].split('.mqo')[0]
-    matrix = zip(*matrix)
+    matrix = list(zip(*matrix))
     if not qtl_matrix:
         qtl_matrix = matrix[:4]
     else:
@@ -278,7 +278,7 @@ class MapQTLPlugin(PluginInterface):
         write_matrix(qtls_file, qtls)
 
         # Write down the QTL matrix
-        qtl_matrix = zip(*qtl_matrix)
+        qtl_matrix = list(zip(*qtl_matrix))
         write_matrix(matrix_file, qtl_matrix)
 
         # Map matrix

@@ -44,9 +44,10 @@ def is_csv_file(inputfile):
     try:
         stream = open(inputfile)
         row = stream.readline()
-        stream.close()
-    except IOError:  # pragma: no cover
+    except (IOError, UnicodeDecodeError):  # pragma: no cover
         return False
+    finally:
+        stream.close()
     content = row.strip().split(',')
     return inputfile.endswith('.csv') and len(content) >= 4
 
@@ -61,7 +62,7 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
         reflective the presence of a QTL.
 
     """
-    t_matrix = zip(*matrix)
+    t_matrix = list(zip(*matrix))
     qtls = [['Trait', 'Linkage Group', 'Position', 'Exact marker']]
     # row 0: markers
     # row 1: chr

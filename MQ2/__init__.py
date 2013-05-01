@@ -58,7 +58,7 @@ def extract_zip(filename, extract_dir):
     if not os.path.exists(extract_dir):
         try:
             os.mkdir(extract_dir)
-        except IOError, err:  # pragma: no cover
+        except IOError as err:  # pragma: no cover
             LOG.info("Could not generate the folder %s" % extract_dir)
             LOG.debug("Error: %s" % err)
             return
@@ -77,7 +77,7 @@ def extract_zip(filename, extract_dir):
                 outfile.flush()
                 outfile.close()
             zfile.close()
-        except IOError, err:  # pragma: no cover
+        except IOError as err:  # pragma: no cover
             LOG.info("Error while extracting the zip archive.")
             LOG.debug("Error: %s" % err)
     else:
@@ -85,7 +85,7 @@ def extract_zip(filename, extract_dir):
             tar = tarfile.open(filename)
             tar.extractall(extract_dir)
             tar.close()
-        except tarfile.ReadError, err:  # pragma: no cover
+        except tarfile.ReadError as err:  # pragma: no cover
             LOG.info("Error while extracting the tarball.")
             LOG.debug("Error: %s" % err)
 
@@ -104,7 +104,7 @@ def get_matrix_dimensions(filename):
         stream.seek(0)
         width = len(stream.readline().split(','))
         return (length, width)
-    except IOError, err:  # pragma: no cover
+    except IOError as err:  # pragma: no cover
         LOG.info("Something wrong happend while reading the file %s "
                  % filename)
         LOG.debug("ERROR: %s" % err)
@@ -127,7 +127,7 @@ def read_input_file(filename, sep='\t', noquote=False):
             if noquote:
                 row = row.replace('"', '')
             output.append(row.split(sep))
-    except IOError, err:  # pragma: no cover
+    except IOError as err:  # pragma: no cover
         LOG.info("Something wrong happend while reading the file %s "
                  % filename)
         LOG.debug("ERROR: %s" % err)
@@ -152,7 +152,7 @@ def write_matrix(outputfile, matrix):
                 stream.write(','.join(row) + '\n')
             else:
                 stream.write(row + '\n')
-    except IOError, err:  # pragma: no cover
+    except IOError as err:  # pragma: no cover
         LOG.info('An error occured while writing the file %s'
                  % outputfile)
         LOG.debug("Error: %s" % err)
