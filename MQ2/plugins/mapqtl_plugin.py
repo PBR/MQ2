@@ -32,7 +32,6 @@ import os
 from MQ2 import (MQ2Exception, MQ2NoSessionException,
                  MQ2NoSuchSessionException, MQ2NoMatrixException,
                  read_input_file, write_matrix)
-from MQ2.qtl import QTL
 from MQ2.plugin_interface import PluginInterface
 
 

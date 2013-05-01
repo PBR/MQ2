@@ -44,7 +44,6 @@ from MQ2 import (__version__,
                  set_tmp_folder,
                  extract_zip,
                  MQ2Exception,
-                 MQ2NoMatrixException,
                  read_input_file,
                  write_matrix)
 from MQ2.plugin_interface import PluginInterface

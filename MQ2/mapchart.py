@@ -29,28 +29,26 @@ MQ2 map chart generation from the data matrix.
 
 import logging
 
-from MQ2 import read_input_file, write_matrix
+from MQ2 import read_input_file
 from MQ2.qtl import QTL
 
 
 LOG = logging.getLogger('MQ2')
 
 
-def _extrac_qtl(peak, block, lod_threshold):
+def _extrac_qtl(peak, block):
     """ Given a row containing the peak of the QTL and all the rows of
     the linkage group of the said QTL (splitted per trait), determine
     the QTL interval and find the start and stop marker of the said
     interval.
-    The interval is a LOD 2 interval when the LOD value of the peak is
-    above the LOD Threshold + 2 otherwise, the LOD interval is equal to
-    Peak LOD - LOD Threshold.
+    The interval is a LOD 2 interval.
     The approach is conservative in the way it takes the first and last
     marker within the interval.
+
     :arg peak, a list containing the row information for the peak marker
     :arg block, a list containing all the rows in the linkage group of
-    this QTL, splitted per trait.
-    :arg log_threshold, threshold used to determine if a given LOD value
-    is reflective the presence of a QTL.
+        this QTL, splitted per trait.
+
     """
     qtls = []
     if not peak:
@@ -137,7 +135,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
 
         infos = row[1:4]
         if qtl_matrix[cnt][1] != linkgrp:
-            qtls = _extrac_qtl(tmp, block, lod_threshold)
+            qtls = _extrac_qtl(tmp, block)
             tmp_dic[linkgrp][1] = qtls
             linkgrp = qtl_matrix[cnt][1]
             tmp_dic[linkgrp] = [[], []]
