@@ -57,7 +57,7 @@ logging.basicConfig()
 LOG = logging.getLogger('MQ2')
 
 
-def get_arguments():
+def _get_arguments():  # pragma: no cover
     """ Handle the command line arguments given to this program """
     LOG.debug('Parse command line argument')
     parser = argparse.ArgumentParser(
@@ -94,19 +94,25 @@ def get_arguments():
     return parser.parse_args()
 
 
-def cli_main():
+def cli_main():  # pragma: no cover
     """ Main function when running from CLI. """
     if '--debug' in sys.argv:
         LOG.setLevel(logging.DEBUG)
     elif '--verbose' in sys.argv:
         LOG.setLevel(logging.INFO)
 
-    args = get_arguments()
-    plugin, folder = get_plugin_and_folder(inputzip=args.inputzip,
-                                           inputdir=args.inputdir,
-                                           inputfile=args.inputfile)
-    run_mq2(plugin, folder, lod_threshold=args.lod,
-            session=args.session)
+    args = _get_arguments()
+    try:
+        plugin, folder = get_plugin_and_folder(
+            inputzip=args.inputzip,
+            inputdir=args.inputdir,
+            inputfile=args.inputfile)
+        run_mq2(
+            plugin, folder, lod_threshold=args.lod, session=args.session)
+    except MQ2Exception, err:
+        print err
+        return 1
+    return 0
 
 
 def get_plugin_and_folder(inputzip=None, inputdir=None, inputfile=None):
@@ -164,7 +170,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
     map_qtl_file = 'map_with_qtls.csv'
     qtls_ml_file = 'qtls_with_mk.csv'
     map_chart_file = 'MapChart.map'
-    if outputfolder:
+    if outputfolder:  # pragma: no cover
         qtls_file = '%s/%s' % (outputfolder, qtls_file)
         qtls_ml_file = '%s/%s' % (outputfolder, qtls_ml_file)
         matrix_file = '%s/%s' % (outputfolder, matrix_file)
@@ -173,7 +179,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
         map_chart_file = '%s/%s' % (outputfolder, map_chart_file)
 
     # call the plugin to create the map and the matrix files
-    if os.path.isdir(folder):
+    if folder and os.path.isdir(folder):
         plugin.convert_inputfiles(folder=folder, session=session,
                                   lod_threshold=lod_threshold,
                                   qtls_file=qtls_file,
@@ -187,7 +193,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
                                   map_file=map_file)
 
     # Add the number of QTLs found on the matrix
-    append_count_to_matrix(matrix_file, lod_threshold)
+    _append_count_to_matrix(matrix_file, lod_threshold)
 
     # append the closest marker to the peak
     add_marker_to_qtls(qtls_file, map_file, outputfile=qtls_ml_file)
@@ -204,7 +210,7 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
     return 0
 
 
-def append_count_to_matrix(qtl_matrixfile, lod_threshold):
+def _append_count_to_matrix(qtl_matrixfile, lod_threshold):
     """ Append an extra column at the end of the matrix file containing
     for each row (marker) the number of QTL found if the marker is known
     ie: Locus != ''
@@ -214,7 +220,7 @@ def append_count_to_matrix(qtl_matrixfile, lod_threshold):
         reflective the presence of a QTL.
 
     """
-    if not os.path.exists(qtl_matrixfile):
+    if not os.path.exists(qtl_matrixfile):  # pragma: no cover
         raise MQ2Exception('File not found: "%s"' % qtl_matrixfile)
     matrix = read_input_file(qtl_matrixfile, sep=',')
     tmp = list(matrix[0])
@@ -233,9 +239,5 @@ def append_count_to_matrix(qtl_matrixfile, lod_threshold):
     write_matrix(qtl_matrixfile, matrix)
 
 
-if __name__ == "__main__":
-    try:
-        cli_main()
-    except MQ2Exception, err:
-        print err
-        sys.exit(1)
+if __name__ == "__main__":  # pragma: no cover
+    cli_main()
