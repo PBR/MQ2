@@ -107,7 +107,7 @@ def cli_main():  # pragma: no cover
             inputzip=args.inputzip,
             inputdir=args.inputdir,
             inputfile=args.inputfile)
-        LOG.debug('Plugin: %s -- Folder: %s' %(plugin.name, folder))
+        LOG.debug('Plugin: %s -- Folder: %s' % (plugin.name, folder))
         run_mq2(
             plugin, folder, lod_threshold=args.lod, session=args.session)
     except MQ2Exception, err:

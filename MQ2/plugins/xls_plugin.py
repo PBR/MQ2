@@ -214,7 +214,6 @@ class XslPlugin(PluginInterface):
 
         """
         sessions = []
-        
         if folder:
             if not os.path.isdir(folder):
                 return sessions
