@@ -30,7 +30,7 @@ MQ2 CSV plugin
 import os
 
 from MQ2 import (MQ2Exception, MQ2NoSessionException,
-                 MQ2NoSuchSessionException,
+                 MQ2NoSuchSessionException, MQ2NoMatrixException,
                  read_input_file, write_matrix)
 from MQ2.qtl import QTL
 from MQ2.plugin_interface import PluginInterface
@@ -104,9 +104,9 @@ def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
                 qtls.append(qtl)
             qtl = None
             continue
-        if entry[4] == '':
+        if entry[4] == '':  # pragma: no cover
             entry[4] = 0
-        if qtl[4] == '':
+        if qtl[4] == '':  # pragma: no cover
             qtl[4] = 0
         if float(entry[4]) > float(qtl[4]):
             qtl = entry
@@ -143,7 +143,7 @@ class MapQTLPlugin(PluginInterface):
         :arg filename: the path to the file to check.
 
         """
-        return filename.startswith('Session ') \
+        return os.path.basename(filename).startswith('Session ') \
             and filename.endswith('.mqo')
 
     @classmethod
@@ -157,6 +157,8 @@ class MapQTLPlugin(PluginInterface):
 
         """
         filelist = []
+        if folder is None or not os.path.isdir(folder):
+            return filelist
         for root, dirs, files in os.walk(folder):
             for filename in files:
                 if filename.startswith('Session ') \
@@ -176,6 +178,8 @@ class MapQTLPlugin(PluginInterface):
 
         """
         sessions = []
+        if folder is None or not os.path.isdir(folder):
+            return sessions
         for root, dirs, files in os.walk(folder):
             for filename in files:
                 if filename.startswith('Session ') \
@@ -227,28 +231,30 @@ class MapQTLPlugin(PluginInterface):
                                'input file')
 
         if folder is not None:
-            if not os.path.isdir(folder):
+            if not os.path.isdir(folder):  # pragma: no cover
                 raise MQ2Exception('The specified folder is actually '
                                    'not a folder')
             else:
                 inputfiles = cls.get_files(folder)
 
-        if inputfile is not None:
+        if inputfile is not None:  # pragma: no cover
             if os.path.isdir(inputfile):
                 raise MQ2Exception('The specified input file is actually '
                                    'a folder')
             else:
                 inputfiles = [inputfile]
 
+        sessions = cls.get_session_identifiers(folder)
         if session is None:
-            sessions = cls.get_session_identifiers(folder)
             raise MQ2NoSessionException(
                 'The MapQTL plugin requires a session identifier to '
                 'identify the session to process.'
                 'Sessions are: %s' % ','.join(sessions))
-
-        if len(inputfiles) == 0:
-            raise MQ2NoSessionException('No files correspond to this session')
+        elif str(session) not in sessions:
+            raise MQ2NoSuchSessionException(
+                'The MapQTL session provided (%s) could not be found in the '
+                'dataset. '
+                'Sessions are: %s' % (session, ','.join(sessions)))
 
         try:
             lod_threshold = float(lod_threshold)
