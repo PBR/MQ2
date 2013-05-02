@@ -142,7 +142,8 @@ class MapQTLPlugin(PluginInterface):
         :arg filename: the path to the file to check.
 
         """
-        return os.path.basename(filename).startswith('Session ') \
+        return not os.path.isdir(filename) \
+            and os.path.basename(filename).startswith('Session ') \
             and filename.endswith('.mqo')
 
     @classmethod
