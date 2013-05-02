@@ -210,6 +210,9 @@ class XslPlugin(PluginInterface):
 
         """
         sessions = []
+        if inputfile and folder:
+            raise MQ2Exception(
+                'You should specify either a folder or a file')
         if folder:
             if not os.path.isdir(folder):
                 return sessions
