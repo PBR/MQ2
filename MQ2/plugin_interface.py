@@ -32,6 +32,17 @@ class PluginInterface(object):  # pragma: no cover
     """ The interface that each plugin should extends to support their
     file format and tool.
 
+    Each plugin should be able to detect if it can be run or not
+    automatically. In case the plugin cannot be used, it should not
+    prevent the other plugins from running.
+
+    Each plugin should be able to detect in a folder (which may contain
+    subfolders) if there are files they are compatible with.
+
+    For some plugin, multiple analyzes can be submitted at once and the
+    plugin needs to know which one should be analyzed.
+    This will be the role of the ``session`` argument.
+
     """
 
     name = 'plugin name'
@@ -44,6 +55,12 @@ class PluginInterface(object):  # pragma: no cover
         This is the function that would check the import and that should
         make sure the rest of the plugin will run smoothly.
 
+        The method ``is_applicable`` will be called by the program and
+        should return a simple boolean telling if the plugin can be run
+        or not.
+        It is this method that should check that all the potential
+        dependencies are met for the plugin to run.
+
         """
         pass
 
@@ -53,8 +70,17 @@ class PluginInterface(object):  # pragma: no cover
         Find this list based on the files name, files extension or even
         actually by reading in the file.
 
-        :arg folder: the path to the folder containing the files to
-            check. This folder may contain sub-folders.
+        The method ``get_files`` will browse the provided path for any
+        file in the specified folder or sub-folder that the plugin can
+        handle.
+
+        .. note:: ``get_files`` should be able to handle the case where
+                  the provided path points to a file rather than a
+                  folder, in which case the plugin should return an
+                  empty list.
+
+        :arg folder: string of the path to the folder containing the
+            files to check. This folder may contain sub-folders.
 
         """
         pass
@@ -63,7 +89,16 @@ class PluginInterface(object):  # pragma: no cover
     def valid_file(cls, filename):
         """ Check if the provided file is a valid file for this plugin.
 
-        :arg filename: the path to the file to check.
+        Since MQ² can also be used on a single file via the command-line,
+        the ``valid_file`` will then be used to check if the provided
+        file can be handled by the plugin.
+
+        .. note:: ``valid_file`` should be able to handle the case where
+                  the provided path points to a director rather than a
+                  file, in which case the plugin should return a `False`
+                  boolean.
+
+        :arg filename: string of the path to the file to check.
 
         """
         pass
@@ -73,9 +108,21 @@ class PluginInterface(object):  # pragma: no cover
         """ Retrieve the list of session identifiers contained in the
         data on the folder or the inputfile.
 
-        :kwarg folder: the path to the folder containing the files to
-            check. This folder may contain sub-folders.
-        :kwarg inputfile: the path to the input file to use
+        The method ``get_session_identifiers`` is used by the
+        web-interface to present to the user a list of sessions they can
+        choose from and by the command line interface, when the user did
+        not specified a session or specified an invalid session.
+
+        The ``get_session_identifiers`` method receive either a folder
+        or an inputfile argument (and should raise and
+        :class:`~MQ2.MQ2Exception` if both are provided). The method
+        extract the session identifiers from this input and return them
+        as a list. If both ``folder`` and ``inputfile`` are ``None``, it
+        may return an empty list.
+
+        :kwarg folder: string of the path to the folder containing the
+            files to check. This folder may contain sub-folders.
+        :kwarg inputfile: string of the path to the input file to use
 
         """
         pass
@@ -93,14 +140,15 @@ class PluginInterface(object):  # pragma: no cover
         inputfile.
         This method creates the matrix representation of the QTLs
         results providing for each marker position the LOD value found
-        for each trait as well as a representation of the genetic map
+        for each trait as well as a list of all the significant QTLs
+        found in the results and a representation of the genetic map
         used in the experiment.
         The genetic map should be cleared of any markers added by the
         QTL mapping software.
 
-        :kwarg folder: the path to the folder containing the files to
-            check. This folder may contain sub-folders.
-        :kwarg inputfile: the path to the input file to use
+        :kwarg folder: string of the path to the folder containing the
+            files to check. This folder may contain sub-folders.
+        :kwarg inputfile: string of the path to the input file to use
         :kwarg session: the session identifier used to identify which
             session to process
         :kwarg lod_threshold: the LOD threshold to apply to determine if
@@ -108,13 +156,13 @@ class PluginInterface(object):  # pragma: no cover
         :kwarg qtls_file: a csv file containing the list of all the
             significant QTLs found in the analysis.
             The matrix is of type:
-               trait, linkage group, position, Marker, LOD other columns
+            ``trait, linkage group, position, Marker, LOD other columns``
         :kwarg matrix_file: a csv file containing a matrix representation
             of the QTL data. This matrix is of type:
-               marker, linkage group, position, trait1 lod, trait2, lod
+            ``marker, linkage group, position, trait1 lod, trait2, lod``
         :kwarg map_file: a csv file containing the genetic map used
             in this experiment. The map is of structure:
-               marker, linkage group, position
+            ``marker, linkage group, position``
 
         """
         pass
