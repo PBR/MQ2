@@ -142,7 +142,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
             tmp = {}
             block = []
 
-        tmp_dic[linkgrp][0].append([row[3], row[2]])
+        tmp_dic[linkgrp][0].append([row[0], row[2]])
 
         colcnt = 4
         for cel in row[4:-1]:
