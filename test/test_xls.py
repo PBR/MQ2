@@ -56,6 +56,10 @@ TEST_INPUT_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     'xls', 'rqtl_out.xls')
 
+TEST_FAKE_INPUT_FILE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'xls', 'fake.xls')
+
 TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -230,7 +234,7 @@ class MQ2MapQTLtests(unittest.TestCase):
             os.path.join(folder,os.listdir(folder)[0])))
 
         self.assertFalse(plugin.valid_file(
-            os.path.join(TEST_FOLDER, 'fake.xls')))
+            TEST_FAKE_INPUT_FILE))
 
     def test_plugin_get_files(self):
         """ Test the get_files method of the plugin.
@@ -241,6 +245,17 @@ class MQ2MapQTLtests(unittest.TestCase):
         self.assertTrue(
             plugin.get_files(folder)[0].endswith('/rqtl_out.xls'))
         self.assertEqual(plugin.get_files(None), [])
+
+    def test_plugin_get_session_identifiers_failed(self):
+        """ Test the get_session_identifiers method of the plugin.
+        """
+        plugin, folder = mq2.get_plugin_and_folder(
+            inputzip=TEST_INPUT_PASSED)
+        self.assertRaises(
+            MQ2.MQ2Exception,
+            plugin.get_session_identifiers,
+            folder=os.path.join(TEST_FOLDER, 'fake.xls'),
+            inputfile=folder)
 
     def test_plugin_get_session_identifiers(self):
         """ Test the get_session_identifiers method of the plugin.
