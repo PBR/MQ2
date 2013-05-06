@@ -67,12 +67,13 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
     # row 0: markers
     # row 1: chr
     # row 2: pos
-    for row in t_matrix[4:]:
+    for row in t_matrix[3:]:
         lgroup = None
         max_lod = None
         peak = None
         cnt = 1
         while cnt < len(row):
+            print row[0]
             if lgroup is None:
                 lgroup = t_matrix[1][cnt]
 
