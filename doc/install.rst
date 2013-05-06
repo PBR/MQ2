@@ -68,6 +68,7 @@ Retrieve the sources from the git using the command:
   git clone https://github.com/PBR/MQ2.git
 
 Then you can either
+
 - run MQ² from the cloned repository using:
 
   ::
