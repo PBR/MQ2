@@ -279,6 +279,11 @@ class MapQTLPlugin(PluginInterface):
         write_matrix(qtls_file, qtls)
 
         # Write down the QTL matrix
+        del(qtl_matrix[0])
+        # Reorganize a couple of columns
+        qtl_matrix.insert(0, qtl_matrix[2])
+        del(qtl_matrix[3])
+        # write output
         qtl_matrix = list(zip(*qtl_matrix))
         write_matrix(matrix_file, qtl_matrix)
 
