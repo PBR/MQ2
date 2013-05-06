@@ -19,11 +19,20 @@ large number of traits.
 
 Get this project:
 -----------------
+
 Sources:  https://github.com/PBR/MQ2
 
 Release: http://pypi.python.org/packages/source/M/MQ2/MQ2-1.0.0.tar.gz
 
 Run it on the web at: http://www.plantbreeding.nl/mq2
+
+
+Dependencies:
+-------------
+
+- `straight.plugin <https://pypi.python.org/pypi/straight.plugin/>`_
+- `xlrd <https://pypi.python.org/pypi/xlrd>`_ (only required by the Excel
+  plugin, if not present only this plugin will be affected)
 
 
 Documentation:
