@@ -234,7 +234,7 @@ def _append_count_to_matrix(qtl_matrixfile, lod_threshold):
     while cnt < len(matrix):
         row = list(matrix[cnt])
         nr_qtl = 0
-        for cel in row[4:]:
+        for cel in row[3:]:
             if cel and float(cel) > float(lod_threshold):
                 nr_qtl = nr_qtl + 1
         row.append(str(nr_qtl))
