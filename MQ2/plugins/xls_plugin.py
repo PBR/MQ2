@@ -113,8 +113,9 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
 
             if lgroup == t_matrix[1][cnt]:
                 if max_lod is None:
-                    max_lod = row[cnt]
-                if row[cnt] > max_lod:
+                    max_lod = float(row[cnt])
+                if float(row[cnt]) > float(max_lod):
+                    max_lod = float(row[cnt])
                     peak = cnt
             else:
                 if max_lod \
@@ -127,7 +128,8 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
                            t_matrix[0][peak],  # marker
                            ]
                     qtls.append(qtl)
-                max_lod = row[cnt]
+                lgroup = None
+                max_lod = None
                 peak = cnt
             cnt = cnt + 1
     return qtls
