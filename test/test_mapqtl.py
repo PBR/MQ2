@@ -207,6 +207,23 @@ class MQ2MapQTLtests(unittest.TestCase):
                 '/Session 2 (IM)_A_trait01.mqo'))
         self.assertEqual(plugin.get_files(None), [])
 
+    def test_plugin_get_files_session(self):
+        """ Test the get_files method of the plugin with a session
+        identifier.
+        """
+        plugin, folder = mq2.get_plugin_and_folder(
+            inputzip=TEST_INPUT_PASSED)
+        self.assertEqual(len(plugin.get_files(folder, session_id=2)), 2)
+        self.assertTrue(
+            plugin.get_files(folder)[0].endswith(
+                '/Session 2 (IM)_A_trait01.mqo'))
+        self.assertEqual(plugin.get_files(None), [])
+
+        self.assertEqual(len(plugin.get_files(folder, session_id=1)), 0)
+        self.assertEqual(plugin.get_files(folder, session_id=1), [])
+        self.assertEqual(
+            len(plugin.get_files(folder, session_id=None)), 2)
+
     def test_plugin_get_session_identifiers(self):
         """ Test the get_session_identifiers method of the plugin.
         """
