@@ -48,6 +48,9 @@ TEST_INPUT_FAILED = os.path.join(
 TEST_INPUT_FAKE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     'invalid', 'fake.zip')
+TEST_INPUT_KW = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'invalid', 'Demo_mapqtl_kw.zip')
 
 TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
@@ -128,6 +131,17 @@ class MQ2MapQTLtests(unittest.TestCase):
             MQ2.MQ2NoSessionException,
             mq2.run_mq2,
             plugin, folder, lod_threshold=3, session=None)
+
+    def test_run_mq2_kw(self):
+        """ Test the run_mq2 function with MapQTL zip input of a Kruskal-Wallis
+        analysis.
+        """
+        plugin, folder = mq2.get_plugin_and_folder(
+            inputzip=TEST_INPUT_KW)
+        self.assertRaises(
+            MQ2.MQ2Exception,
+            mq2.run_mq2,
+            plugin, folder, lod_threshold=3, session=2)
 
     def test_run_mq2_no_folder(self):
         """ Test the run_mq2 function with MapQTL zip input and without
