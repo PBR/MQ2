@@ -51,6 +51,12 @@ def get_qtls_matrix(qtl_matrix, matrix, inputfile):
     """
     trait_name = inputfile.split(')_', 1)[1].split('.mqo')[0]
     matrix = list(zip(*matrix))
+    if matrix[4][0] != 'LOD':
+        raise MQ2Exception(
+                'The file "%s" is not supported by MQ2. It may contain an '
+                'analysis which does not return LOD values '
+                '(such as Kruskal-Wallis).' % inputfile)
+
     if not qtl_matrix:
         qtl_matrix = matrix[:4]
     else:
