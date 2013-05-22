@@ -55,7 +55,7 @@ def get_qtls_matrix(qtl_matrix, matrix, inputfile):
         raise MQ2Exception(
                 'The file "%s" is not supported by MQ2. It may contain an '
                 'analysis which does not return LOD values '
-                '(such as Kruskal-Wallis).' % inputfile)
+                '(such as Kruskal-Wallis or permutation test).' % inputfile)
 
     if not qtl_matrix:
         qtl_matrix = matrix[:4]
