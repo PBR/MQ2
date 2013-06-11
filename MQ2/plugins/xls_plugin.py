@@ -98,7 +98,7 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
 
     """
     t_matrix = list(zip(*matrix))
-    qtls = [['Trait', 'Linkage Group', 'Position', 'LOD', 'Exact marker']]
+    qtls = [['Trait', 'Linkage Group', 'Position', 'Exact marker', 'LOD']]
     # row 0: markers
     # row 1: chr
     # row 2: pos
@@ -124,8 +124,8 @@ def get_qtls_from_rqtl_data(matrix, lod_threshold):
                     qtl = [row[0],             # trait
                            t_matrix[1][peak],  # LG
                            t_matrix[2][peak],  # pos
-                           max_lod,            # LOD value
                            t_matrix[0][peak],  # marker
+                           max_lod,            # LOD value
                            ]
                     qtls.append(qtl)
                 lgroup = None
