@@ -53,8 +53,8 @@ def _extrac_qtl(peak, block):
     qtls = []
     if not peak:
         return qtls
+    threshold = 2
     for trait in peak:
-        threshold = 2
         # Search QTL start
         cnt = block.index(peak[trait])
         start = block[cnt]
@@ -76,10 +76,10 @@ def _extrac_qtl(peak, block):
 
         qtl = QTL()
         qtl.trait = trait
-        qtl.start_position = start[1]
-        qtl.peak_start_position = peak[trait][1]
-        qtl.peak_stop_position = peak[trait][1]
-        qtl.stop_position = end[1]
+        qtl.start_position = start[2]
+        qtl.peak_start_position = peak[trait][2]
+        qtl.peak_stop_position = peak[trait][2]
+        qtl.stop_position = end[2]
         qtls.append(qtl)
     return qtls
 
@@ -133,7 +133,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
         if not linkgrp in tmp_dic:
             tmp_dic[linkgrp] = [[], []]
 
-        infos = row[1:4]
+        infos = row[0:4]
         if qtl_matrix[cnt][1] != linkgrp:
             qtls = _extrac_qtl(tmp, block)
             tmp_dic[linkgrp][1] = qtls
@@ -144,19 +144,18 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
 
         tmp_dic[linkgrp][0].append([row[0], row[2]])
 
-        colcnt = 4
-        for cel in row[4:-1]:
+        colcnt = 3
+        for cel in row[3:-1]:
             blockrow = infos[:]
             blockrow.extend([qtl_matrix[0][colcnt], cel])
             block.append(blockrow)
             if cel.strip() != '' and float(cel) >= float(lod_threshold):
                 temp = infos[:]
-                if not tmp:
-                    temp.extend([qtl_matrix[0][colcnt], cel])
-                    tmp[qtl_matrix[0][colcnt]] = temp
-                elif (qtl_matrix[0][colcnt] in tmp
-                      and float(cel) >= float(
-                      tmp[qtl_matrix[0][colcnt]][-1])) \
+                if not tmp\
+                        or (qtl_matrix[0][colcnt] in tmp
+                            and float(cel) >= float(
+                                tmp[qtl_matrix[0][colcnt]][-1])
+                            ) \
                         or qtl_matrix[0][colcnt] not in tmp:
                     temp.extend([qtl_matrix[0][colcnt], cel])
                     tmp[qtl_matrix[0][colcnt]] = temp
@@ -173,7 +172,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
         # on the page.
         if 'U' in keys:
             keys.remove('U')
-        # Try to convert all the groups to float, which would result in
+        # Try to convert all the groups to int, which would result in
         # a better sorting. If that fails, fail silently.
         try:
             keys = [int(key) for key in keys]
