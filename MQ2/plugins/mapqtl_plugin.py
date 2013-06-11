@@ -107,8 +107,7 @@ def get_qtls_from_mapqtl_data(matrix, threshold, inputfile):
             if float(qtl[4]) > float(threshold):
                 qtl[0] = trait_name
                 qtls.append(qtl)
-            qtl = None
-            continue
+            qtl = entry
         if entry[4] == '':  # pragma: no cover
             entry[4] = 0
         if qtl[4] == '':  # pragma: no cover

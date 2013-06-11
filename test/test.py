@@ -123,14 +123,14 @@ class MQ2tests(unittest.TestCase):
         """ Test MQ² get_matrix_dimensions function """
         (length, width) = MQ2.get_matrix_dimensions(
             os.path.join(TEST_FOLDER,'mapqtl', 'qtls.exp'))
-        self.assertEqual(length, 4)
+        self.assertEqual(length, 5)
         self.assertEqual(width, 14)
 
     def test_mq2_read_input_file(self):
         """ Test MQ² read_input_file function """
         matrix = MQ2.read_input_file(
             os.path.join(TEST_FOLDER, 'mapqtl', 'qtls.exp'), sep=',')
-        self.assertEqual(len(matrix), 4)
+        self.assertEqual(len(matrix), 5)
         self.assertEqual(len(matrix[0]), 14)
 
     def test_MQ2_write_matrix(self):
