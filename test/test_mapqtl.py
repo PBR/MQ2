@@ -83,13 +83,13 @@ class MQ2MapQTLtests(unittest.TestCase):
         """ Constructor. """
         unittest.TestCase.__init__(self, method_name)
 
-    def setUp(self):
-        """ Set up the environnment, ran before every tests. """
-        clean_directory()
+    #def setUp(self):
+        #""" Set up the environnment, ran before every tests. """
+        #clean_directory()
 
-    def tearDown(self):
-        """ Clean up the environnment, ran after every tests. """
-        clean_directory()
+    #def tearDown(self):
+        #""" Clean up the environnment, ran after every tests. """
+        #clean_directory()
 
     def test_get_plugin_and_folder(self):
         """ Test the get_plugin_and_folder function with MapQTL zip

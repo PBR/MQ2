@@ -38,10 +38,13 @@ class QTL(object):
     def __init__(self):
         """ Default constructor for the QTL object. """
         self.trait = ''
+        self.start_mk = 'NA'
         self.start_position = ''
+        self.peak_mk = None
         self.peak_start_position = ''
         self.peak_stop_position = ''
         self.stop_position = ''
+        self.stop_mk = 'NA'
         self.peak_lod = 0
 
     def to_string(self):
@@ -52,6 +55,10 @@ class QTL(object):
         return '%s   %s %s %s %s' % (
             self.trait, self.start_position, self.peak_start_position,
             self.peak_stop_position, self.stop_position)
+
+    def get_flanking_markers(self):
+        """ Return the list of the flanking marker correctly ordered. """
+        return [self.start_mk, self.stop_mk]
 
     def __repr__(self):  # pragma: no cover
         """ String representation of the QTL object. """

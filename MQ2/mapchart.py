@@ -27,16 +27,17 @@
 MQ2 map chart generation from the data matrix.
 """
 
+import re
 import logging
 
-from MQ2 import read_input_file
+from MQ2 import read_input_file, write_matrix
 from MQ2.qtl import QTL
 
 
 LOG = logging.getLogger('MQ2')
 
 
-def _extrac_qtl(peak, block):
+def _extrac_qtl(peak, block, headers):
     """ Given a row containing the peak of the QTL and all the rows of
     the linkage group of the said QTL (splitted per trait), determine
     the QTL interval and find the start and stop marker of the said
@@ -46,8 +47,10 @@ def _extrac_qtl(peak, block):
     marker within the interval.
 
     :arg peak, a list containing the row information for the peak marker
-    :arg block, a list containing all the rows in the linkage group of
-        this QTL, splitted per trait.
+    :arg block, a hash containing per column, all the rows in the
+        linkage group of this QTL, splitted per trait.
+    :arg headers, the first row of the QTL matrix file, used to determine
+        which block to look at for each trait process.
 
     """
     qtls = []
@@ -55,30 +58,42 @@ def _extrac_qtl(peak, block):
         return qtls
     threshold = 2
     for trait in peak:
+        blockcnt = headers.index(trait)
+        local_block = block[blockcnt]
+        lod2_threshold = float(peak[trait][-1]) - float(threshold)
         # Search QTL start
-        cnt = block.index(peak[trait])
-        start = block[cnt]
-        while cnt > 0:
-            if block[cnt][-2] == trait:
-                if (float(block[cnt][-1]) - float(threshold)) >= 0:
-                    start = block[cnt]
+        cnt = local_block.index(peak[trait])
+        start = local_block[cnt]
+        while cnt >= 0:
+            start = local_block[cnt]
+            if re.match(r'c\d+\.loc[\d\.]+', local_block[cnt][0]):
+                cnt = cnt - 1
+                continue
+            if float(local_block[cnt][-1]) < lod2_threshold:
+                break
             cnt = cnt - 1
 
         # Search QTL end
         end = []
-        cnt = block.index(peak[trait])
-        end = block[cnt]
-        while cnt < len(block):
-            if block[cnt][-2] == trait:
-                if (float(block[cnt][-1]) - float(threshold)) >= 0:
-                    end = block[cnt]
+        cnt = local_block.index(peak[trait])
+        end = local_block[cnt]
+        while cnt < len(local_block):
+            end = local_block[cnt]
+            if re.match(r'c\d+\.loc[\d\.]+', local_block[cnt][0]):
+                cnt += 1
+                continue
+            if float(local_block[cnt][-1]) < lod2_threshold:
+                break
             cnt = cnt + 1
 
         qtl = QTL()
         qtl.trait = trait
+        qtl.start_mk = start[0]
         qtl.start_position = start[2]
+        qtl.peak_mk = peak[trait][0]
         qtl.peak_start_position = peak[trait][2]
         qtl.peak_stop_position = peak[trait][2]
+        qtl.stop_mk = end[0]
         qtl.stop_position = end[2]
         qtls.append(qtl)
     return qtls
@@ -124,7 +139,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
     tmp_dic = {}
     cnt = 1
     tmp = {}
-    block = []
+    block = {}
     for row in qtl_matrix[1:]:
         linkgrp = qtl_matrix[cnt - 1][1]
         if cnt == 1:
@@ -133,14 +148,15 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
         if not linkgrp in tmp_dic:
             tmp_dic[linkgrp] = [[], []]
 
-        infos = row[0:4]
+        infos = row[0:3]
         if qtl_matrix[cnt][1] != linkgrp:
-            qtls = _extrac_qtl(tmp, block)
-            tmp_dic[linkgrp][1] = qtls
+            if tmp:
+                qtls = _extrac_qtl(tmp, block, qtl_matrix[0])
+                tmp_dic[linkgrp][1] = qtls
             linkgrp = qtl_matrix[cnt][1]
             tmp_dic[linkgrp] = [[], []]
             tmp = {}
-            block = []
+            block = {}
 
         tmp_dic[linkgrp][0].append([row[0], row[2]])
 
@@ -148,7 +164,10 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
         for cel in row[3:-1]:
             blockrow = infos[:]
             blockrow.extend([qtl_matrix[0][colcnt], cel])
-            block.append(blockrow)
+            if colcnt in block:
+                block[colcnt].append(blockrow)
+            else:
+                block[colcnt] = [blockrow]
             if cel.strip() != '' and float(cel) >= float(lod_threshold):
                 temp = infos[:]
                 if not tmp\
@@ -161,6 +180,8 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
                     tmp[qtl_matrix[0][colcnt]] = temp
             colcnt = colcnt + 1
         cnt = cnt + 1
+
+    qtl_info = {}
 
     try:
         stream = open(map_chart_file, 'w')
@@ -192,6 +213,7 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
                     stream.write('\n')
                     stream.write('qtls\n')
                     for qtl in tmp_dic[key][1]:
+                        qtl_info[qtl.peak_mk] = qtl.get_flanking_markers()
                         stream.write('%s \n' % qtl.to_string())
                 stream.write('\n')
                 stream.write('\n')
@@ -202,3 +224,25 @@ def generate_map_chart_file(qtl_matrix, lod_threshold,
     finally:
         stream.close()
     LOG.info('Wrote MapChart map in file %s' % map_chart_file)
+
+    return qtl_info
+
+
+def append_flanking_markers(qtls_mk_file, flanking_markers):
+    """ Append the flanking markers extracted in the process of
+    generating the MapChart to the QTL list file.
+    """
+    matrix = read_input_file(qtls_mk_file, sep=',')
+    output = []
+    cnt = 0
+    for row in matrix:
+        if cnt == 0:
+            markers = ['LOD2 interval start', 'LOD2 interval end']
+        elif row[3] in flanking_markers:
+            markers = flanking_markers[row[3]]
+        else:
+            markers = ['NA', 'NA']
+        cnt += 1
+        row.extend(markers)
+        output.append(row)
+    write_matrix(qtls_mk_file, output)

@@ -48,7 +48,7 @@ from MQ2 import (__version__,
 from MQ2.plugin_interface import PluginInterface
 from MQ2.add_marker_to_qtls import add_marker_to_qtls
 from MQ2.add_qtl_to_map import add_qtl_to_map
-from MQ2.mapchart import generate_map_chart_file
+from MQ2.mapchart import generate_map_chart_file, append_flanking_markers
 
 
 logging.basicConfig()
@@ -172,11 +172,11 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
     matrix_file = 'qtls_matrix.csv'
     map_file = 'map.csv'
     map_qtl_file = 'map_with_qtls.csv'
-    qtls_ml_file = 'qtls_with_mk.csv'
+    qtls_mk_file = 'qtls_with_mk.csv'
     map_chart_file = 'MapChart.map'
     if outputfolder:  # pragma: no cover
         qtls_file = '%s/%s' % (outputfolder, qtls_file)
-        qtls_ml_file = '%s/%s' % (outputfolder, qtls_ml_file)
+        qtls_mk_file = '%s/%s' % (outputfolder, qtls_mk_file)
         matrix_file = '%s/%s' % (outputfolder, matrix_file)
         map_file = '%s/%s' % (outputfolder, map_file)
         map_qtl_file = '%s/%s' % (outputfolder, map_qtl_file)
@@ -200,14 +200,18 @@ def run_mq2(plugin, folder, lod_threshold=None, session=None,
     _append_count_to_matrix(matrix_file, lod_threshold)
 
     LOG.debug('Append the closest marker to the peak')
-    add_marker_to_qtls(qtls_file, map_file, outputfile=qtls_ml_file)
+    add_marker_to_qtls(qtls_file, map_file, outputfile=qtls_mk_file)
 
     LOG.debug('Put the number of QTLs found on each marker of the map')
-    add_qtl_to_map(qtls_ml_file, map_file, outputfile=map_qtl_file)
+    add_qtl_to_map(qtls_mk_file, map_file, outputfile=map_qtl_file)
 
     LOG.debug('Generate the mapchart file')
-    generate_map_chart_file(matrix_file, lod_threshold,
-                            map_chart_file=map_chart_file)
+    flanking_markers = generate_map_chart_file(
+        matrix_file, lod_threshold, map_chart_file=map_chart_file)
+
+    LOG.debug('Append flanking markers to qtl list')
+    flanking_markers = append_flanking_markers(
+        qtls_mk_file, flanking_markers)
 
     if folder and os.path.isdir(folder) and os.path.exists(folder):
         shutil.rmtree(folder)

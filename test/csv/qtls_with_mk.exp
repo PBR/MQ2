@@ -1,5 +1,5 @@
-Trait,Linkage Group,Position,LOD,Exact marker,Closest marker
-pheno1,2,35,3.52039385175,c2.loc35,D2M336
-pheno1,5,17.5,7.76418128998,c5.loc17.5,D5M157
-pheno2,5,9.8,3.89290630835,D5M394,D5M394
-age,10,37.5,4.05464482781,c10.loc37.5,D10M68
+Trait,Linkage Group,Position,Exact marker,LOD,Closest marker,LOD2 interval start,LOD2 interval end
+pheno1,2,35,c2.loc35,3.52039385175,D2M336,D2M359,D2M51
+pheno1,5,17.5,c5.loc17.5,7.76418128998,D5M157,D5M233,D5M406
+pheno2,5,9.8,D5M394,3.89290630835,D5M394,D5M13,D5M157
+age,10,37.5,c10.loc37.5,4.05464482781,D10M68,D10M166,D10M14
