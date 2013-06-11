@@ -24,7 +24,7 @@ If you're submitting patches to MQ², please observe the following:
 - If you are adding new code, please write tests for them in ``test/``,
 
 - If your change warrants a modification to the docs in ``doc/`` or any
-  docstrings in ``src/`` please make that modification.
+  docstrings in ``MQ2/`` please make that modification.
 
 .. note:: You have a doubt, you don't know how to do something, you have an
    idea but don't know how to implement it, you just have something bugging
